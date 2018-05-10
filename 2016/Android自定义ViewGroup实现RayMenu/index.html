@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="Jm8dSS8EbHEbdDSvWToFC_2CqT2FIY4i0JJYdsCamak" />
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,自定义View," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="先来看一下实现的效果  github 上有大神写的类似效果的项目：ArcMenu 我这个思路来源于鸿洋大神的 blog，感谢！http://blog.csdn.net/lmj623565791/article/details/37567907 实现思路标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item">
+<meta name="keywords" content="Android,自定义View">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 自定义 ViewGroup 实现 RayMenu">
+<meta property="og:url" content="https://www.bincn.xyz/2016/Android自定义ViewGroup实现RayMenu/index.html">
+<meta property="og:site_name" content="bincn&#39;s blog">
+<meta property="og:description" content="先来看一下实现的效果  github 上有大神写的类似效果的项目：ArcMenu 我这个思路来源于鸿洋大神的 blog，感谢！http://blog.csdn.net/lmj623565791/article/details/37567907 实现思路标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.bincn.xyz/images/RayMenu.gif">
+<meta property="og:image" content="https://www.bincn.xyz/images/RayMenu_calcu.png">
+<meta property="og:updated_time" content="2018-05-10T02:48:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 自定义 ViewGroup 实现 RayMenu">
+<meta name="twitter:description" content="先来看一下实现的效果  github 上有大神写的类似效果的项目：ArcMenu 我这个思路来源于鸿洋大神的 blog，感谢！http://blog.csdn.net/lmj623565791/article/details/37567907 实现思路标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item">
+<meta name="twitter:image" content="https://www.bincn.xyz/images/RayMenu.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.bincn.xyz/2016/Android自定义ViewGroup实现RayMenu/"/>
+
+
+
+
+
+  <title>Android 自定义 ViewGroup 实现 RayMenu | bincn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">bincn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一名普通的程序员</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/2016/Android自定义ViewGroup实现RayMenu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bincn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bincn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 自定义 ViewGroup 实现 RayMenu</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-21T00:00:00+08:00">
+                2016-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>先来看一下实现的效果</p>
+<p><img src="/images/RayMenu.gif" alt="RayMenu.gif"></p>
+<p>github 上有大神写的类似效果的项目：<br><a href="https://github.com/daCapricorn/ArcMenu" target="_blank" rel="noopener">ArcMenu</a></p>
+<p>我这个思路来源于鸿洋大神的 blog，感谢！<br><a href="http://blog.csdn.net/lmj623565791/article/details/37567907" target="_blank" rel="noopener">http://blog.csdn.net/lmj623565791/article/details/37567907</a></p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item</p>
+<h3 id="动画效果实现"><a href="#动画效果实现" class="headerlink" title="动画效果实现"></a>动画效果实现</h3><p>这里我用 TranslateAnimation 实现，对动画有了解的同学应该知道，TranslateAnimation 本质是不会改变按钮的位置，而我们的按钮在动画结束后是要点击的。做法：默认让子菜单就已经在目标位置，然后 GONE，当点击加号时，让按钮 VISIBLE，开始动画，把起始位置设为定点，终点位置就是我们隐藏的区域。当然，也可以用属性动画实现这个效果。</p>
+<h3 id="确定位置"><a href="#确定位置" class="headerlink" title="确定位置"></a>确定位置</h3><p><img src="/images/RayMenu_calcu.png" alt="calcu"></p>
+<p>如上图，我们可以计算出1-3号 item 的位置，同理也可以计算出4-6号 item 的位置，而6号 item 的位置就是 menu 开启按钮的位置，当 menu 打开时，menu 开启按钮隐藏，反之显示。</p>
+<h2 id="接下来看具体实现"><a href="#接下来看具体实现" class="headerlink" title="接下来看具体实现"></a>接下来看具体实现</h2><h3 id="onMeasure"><a href="#onMeasure" class="headerlink" title="onMeasure()"></a>onMeasure()</h3><p>方法比较简单，计算子 View 的大小，获取 ViewGroup 的宽度、高度、paddingLeft 和 paddingRight，计算我们自定义 ViewGroup 实际显示的宽度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</span><br><span class="line">    // 当前ViewGroup的宽度和高度</span><br><span class="line">    mMeasuredWidth = getMeasuredWidth();</span><br><span class="line">    mMeasuredHeight = getMeasuredHeight();</span><br><span class="line">    mPaddingLeft = getPaddingLeft();</span><br><span class="line">    mPaddingRight = getPaddingRight();</span><br><span class="line"></span><br><span class="line">    // ViewGroup实际可显示的宽，减去左右的padding</span><br><span class="line">    mActualWidth = mMeasuredWidth - mPaddingLeft - mPaddingRight;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; getChildCount(); i++) &#123;</span><br><span class="line">        getChildAt(i).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    super.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="onLayout"><a href="#onLayout" class="headerlink" title="onLayout()"></a>onLayout()</h3><p>确定子 View 的位置。<br>首先在 layoutFirstChildView() 中对 menu 开关按钮（就是 ViewGroup 中的第一个子 View ）进行设置，以及初始化点击事件；然后从第二个子 View 开始为菜单项，分别设置其位置，计算的原理就是上面的草图，把子 View 事先设置在要显示的位置，然后 GONE。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onLayout(boolean changed, int l, int t, int r, int b) &#123;</span><br><span class="line">    // changed参数，当前ViewGroup的尺寸或者位置是否发生了改变</span><br><span class="line">    if (!changed) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 第一个子View，作为menu的开关button</span><br><span class="line">    View firstChildView = getChildAt(0);</span><br><span class="line"></span><br><span class="line">    // 所有子View的宽高都一致</span><br><span class="line">    mCWidth = firstChildView.getMeasuredWidth();</span><br><span class="line">    mCHeight = firstChildView.getMeasuredHeight();</span><br><span class="line"></span><br><span class="line">    // 水平间隔</span><br><span class="line">    mHorizontalSpace = (mActualWidth - 3 * mCWidth) / 2;</span><br><span class="line">    // 垂直间隔</span><br><span class="line">    mVerticalSpace = dip2px(mContext, 40);</span><br><span class="line"></span><br><span class="line">    // 绘制第一个子View</span><br><span class="line">    layoutFirstChildView(firstChildView);</span><br><span class="line"></span><br><span class="line">    int childCount = getChildCount();</span><br><span class="line"></span><br><span class="line">    // 子View的行数</span><br><span class="line">    mLine = (int) Math.ceil(childCount / 3.0f);</span><br><span class="line"></span><br><span class="line">    for (int i = 1; i &lt; childCount; i++) &#123;</span><br><span class="line">        View childView = getChildAt(i);</span><br><span class="line">        childView.setVisibility(GONE);</span><br><span class="line"></span><br><span class="line">        // 标记当前子View的所在行</span><br><span class="line">        int lineTag = (i - 1) / mLine;</span><br><span class="line"></span><br><span class="line">        // 水平偏移量</span><br><span class="line">        int horizontalOffset = (i - 1 - lineTag * 3) * (mHorizontalSpace + mCWidth);</span><br><span class="line">        // 垂直偏移量</span><br><span class="line">        int verticalOffset = (2 - lineTag) * mVerticalSpace;</span><br><span class="line"></span><br><span class="line">        int left = horizontalOffset + mPaddingLeft;</span><br><span class="line">        int top = mMeasuredHeight - (2 - lineTag) * mCHeight - verticalOffset;</span><br><span class="line">        int right = left + mCWidth;</span><br><span class="line">        int bottom = mMeasuredHeight - (1 - lineTag) * mCHeight - verticalOffset;</span><br><span class="line"></span><br><span class="line">        childView.layout(left, top, right, bottom);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="设置-menu-开启事件和子-View-点击事件"><a href="#设置-menu-开启事件和子-View-点击事件" class="headerlink" title="设置 menu 开启事件和子 View 点击事件"></a>设置 menu 开启事件和子 View 点击事件</h3><p>此时子 View 已经在要显示的位置了，只是状态是不显示 GONE，当我们点击开始按钮时，遍历子 View 先设置状态为显示 VISIBLE，然后创建动画，开始位置为屏幕外某一点，结束位置就是子 View 实际的位置。最后就是绑定子 View 点击事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 开关menu</span><br><span class="line"> */</span><br><span class="line">private void toggleMenu(int durationMillis) &#123;</span><br><span class="line">	int childCount = getChildCount();</span><br><span class="line">    for (int i = 1; i &lt; childCount; i++) &#123;</span><br><span class="line">        View childView = getChildAt(i);</span><br><span class="line">        childView.setVisibility(VISIBLE);</span><br><span class="line"></span><br><span class="line">        // 标记当前子View的所在行</span><br><span class="line">        int lineTag = (i - 1) / mLine;</span><br><span class="line">        // 垂直偏移量</span><br><span class="line">        int verticalOffset = (2 - lineTag) * mVerticalSpace;</span><br><span class="line">        int top = mMeasuredHeight - (2 - lineTag) * mCHeight - verticalOffset;</span><br><span class="line"></span><br><span class="line">        // 创建并且绑定menu动画</span><br><span class="line">        createBindMenuAnim(childView, childCount, i, top, durationMillis);</span><br><span class="line"></span><br><span class="line">        childView.setTag(i);</span><br><span class="line">        // 子View点击事件</span><br><span class="line">        childView.setOnClickListener(new OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                bindMenuItemAnim(v, (Integer) v.getTag());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建-menu-开关动画和子-View-点击动画"><a href="#创建-menu-开关动画和子-View-点击动画" class="headerlink" title="创建 menu 开关动画和子 View 点击动画"></a>创建 menu 开关动画和子 View 点击动画</h3><p>这里就比较简单了，根据 menu 打开还是关闭，设置不同的动画，子 View 的动画也是类似的，这里有一个时机问题，就是当点击子 View 的时候，要当动画结束的时候再做其他的操作（比如跳转界面）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * menu动画</span><br><span class="line"> *</span><br><span class="line"> * @param childView 子View</span><br><span class="line"> * @param top fromYDelta、toYDelta</span><br><span class="line"> * @param i 当前子View的位置</span><br><span class="line"> * @param durationMillis 动画时间</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">private void createBindMenuAnim(final View childView, int childCount, int i, int top, int durationMillis) &#123;</span><br><span class="line">    AnimationSet animset = new AnimationSet(true);</span><br><span class="line">    Animation animation = null;</span><br><span class="line">    if (!mIsOpen) &#123;</span><br><span class="line">        // 打开menu</span><br><span class="line">        animset.setInterpolator(new OvershootInterpolator(1.5F));</span><br><span class="line">        animation = new TranslateAnimation(0, 0, top, 0);</span><br><span class="line">        childView.setClickable(true);</span><br><span class="line">        childView.setFocusable(true);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 关闭menu</span><br><span class="line">        animation = new TranslateAnimation(0, 0, 0, top);</span><br><span class="line">        childView.setClickable(false);</span><br><span class="line">        childView.setFocusable(false);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 当menu关闭时隐藏所有的子View</span><br><span class="line">    animation.setAnimationListener(new Animation.AnimationListener() &#123;</span><br><span class="line">        public void onAnimationStart(Animation animation) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void onAnimationRepeat(Animation animation) &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void onAnimationEnd(Animation animation) &#123;</span><br><span class="line">            if (!mIsOpen) &#123;</span><br><span class="line">                childView.setVisibility(View.GONE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    animation.setFillAfter(true);</span><br><span class="line">    animation.setDuration(durationMillis);</span><br><span class="line">    // 设置动画开始的延迟时间</span><br><span class="line">    animation.setStartOffset((i * 100) / (childCount - 1));</span><br><span class="line">    animset.addAnimation(animation);</span><br><span class="line">    childView.startAnimation(animset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绑定子View动画</span><br><span class="line"> */</span><br><span class="line">private void bindMenuItemAnim(View clickView, int pos) &#123;</span><br><span class="line">    mClickView = clickView;</span><br><span class="line">    mPos = pos;</span><br><span class="line">    Animation animation = null;</span><br><span class="line">    for (int i = 1; i &lt; getChildCount(); i++) &#123;</span><br><span class="line">        final View childView = getChildAt(i);</span><br><span class="line">        if (pos == i) &#123;</span><br><span class="line">            // 当前点击的子View</span><br><span class="line">            animation = createChildViewAnim(true, 300);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // 其他未被点击的字View</span><br><span class="line">            animation = createChildViewAnim(false, 300);</span><br><span class="line">        &#125;</span><br><span class="line">        childView.startAnimation(animation);</span><br><span class="line">        childView.setClickable(false);</span><br><span class="line">        childView.setFocusable(false);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mIsOpen = false;</span><br><span class="line">    Animation anim = new ScaleAnimation(0f, 1.0f, 0, 1.0f,</span><br><span class="line">            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);</span><br><span class="line">    anim.setDuration(300);</span><br><span class="line">    anim.setFillAfter(true);</span><br><span class="line">    anim.setAnimationListener(new Animation.AnimationListener() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onAnimationStart(Animation animation) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onAnimationEnd(Animation animation) &#123;</span><br><span class="line">            if (mListener != null) &#123;</span><br><span class="line">                mListener.onClick(mClickView, mPos);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onAnimationRepeat(Animation animation) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    mToggleBtn.startAnimation(anim);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="menu-状态改变"><a href="#menu-状态改变" class="headerlink" title="menu 状态改变"></a>menu 状态改变</h3><p>这里是设置 menu 的状态，还有设置开启按钮的动画效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * menu状态改变</span><br><span class="line"> */</span><br><span class="line">private void changeStatus(boolean isOpen) &#123;</span><br><span class="line">    mIsOpen = isOpen;</span><br><span class="line">    // menu开关按钮显示隐藏</span><br><span class="line">    if (!mIsOpen) &#123;</span><br><span class="line">        Animation anim = new ScaleAnimation(0f, 1.0f, 0, 1.0f,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);</span><br><span class="line">        anim.setDuration(300);</span><br><span class="line">        anim.setFillAfter(true);</span><br><span class="line">        mToggleBtn.startAnimation(anim);</span><br><span class="line"></span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        mToggleBtn.startAnimation(createChildViewAnim(false, 300));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="设置点击背景关闭-menu"><a href="#设置点击背景关闭-menu" class="headerlink" title="设置点击背景关闭 menu"></a>设置点击背景关闭 menu</h3><p>这里我是要实现点击除了子 View 的其他位置也要能关闭 menu，也就是背景。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">    int action = event.getAction();</span><br><span class="line">    // 设置touch事件，点击背景关闭menu，只有当menu已经打开才有效</span><br><span class="line">    if (mIsOpen &amp;&amp; action == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">       toggleMenu(300);</span><br><span class="line">       changeStatus(false);</span><br><span class="line">    &#125;</span><br><span class="line">    return super.onTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一个自定义的 ViewGroup 就已经实现了，大家感觉怎么样？</p>
+<p>最后给出源码地址 <a href="https://github.com/WenbinMa/RayMenu" target="_blank" rel="noopener">RayMenu</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    bincn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.bincn.xyz/2016/Android自定义ViewGroup实现RayMenu/" title="Android 自定义 ViewGroup 实现 RayMenu">https://www.bincn.xyz/2016/Android自定义ViewGroup实现RayMenu/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/自定义View/" rel="tag"># 自定义View</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/Android Activity启动模式总结/" rel="next" title="Android Activity 启动模式总结">
+                <i class="fa fa-chevron-left"></i> Android Activity 启动模式总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/优雅的配置Android项目/" rel="prev" title="优雅的配置 Android 项目">
+                优雅的配置 Android 项目 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="bincn" />
+            
+              <p class="site-author-name" itemprop="name">bincn</p>
+              <p class="site-description motion-element" itemprop="description">一名普通的程序员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思路"><span class="nav-number">1.</span> <span class="nav-text">实现思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动画效果实现"><span class="nav-number">1.1.</span> <span class="nav-text">动画效果实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定位置"><span class="nav-number">1.2.</span> <span class="nav-text">确定位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接下来看具体实现"><span class="nav-number">2.</span> <span class="nav-text">接下来看具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#onMeasure"><span class="nav-number">2.1.</span> <span class="nav-text">onMeasure()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onLayout"><span class="nav-number">2.2.</span> <span class="nav-text">onLayout()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置-menu-开启事件和子-View-点击事件"><span class="nav-number">2.3.</span> <span class="nav-text">设置 menu 开启事件和子 View 点击事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-menu-开关动画和子-View-点击动画"><span class="nav-number">2.4.</span> <span class="nav-text">创建 menu 开关动画和子 View 点击动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#menu-状态改变"><span class="nav-number">2.5.</span> <span class="nav-text">menu 状态改变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置点击背景关闭-menu"><span class="nav-number">2.6.</span> <span class="nav-text">设置点击背景关闭 menu</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bincn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
