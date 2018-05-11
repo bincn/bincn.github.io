@@ -69,7 +69,7 @@
 
 
 
-  <meta name="keywords" content="SSH,GitHub," />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -80,18 +80,29 @@
 
 
 
-<meta name="description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
-<meta name="keywords" content="SSH,GitHub">
+<meta name="description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Continuous Integration 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous I">
+<meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="生成 SSH Key 并且访问 GitHub">
-<meta property="og:url" content="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html">
+<meta property="og:title" content="配置 Android 项目-持续集成">
+<meta property="og:url" content="https://www.bincn.xyz/configuring-android-project-continuous-integration.html">
 <meta property="og:site_name" content="bincn&#39;s blog">
-<meta property="og:description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
+<meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Continuous Integration 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous I">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-11T06:12:23.000Z">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/int1.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/int2.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/int3.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/Status%20check%20in%20progress.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/Status%20check%20failed.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/Status%20check%20completed%20successful.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/Workflow%20editor.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/Build%20detail.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/ca.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/ca1.png">
+<meta property="og:updated_time" content="2018-05-11T07:45:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="生成 SSH Key 并且访问 GitHub">
-<meta name="twitter:description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
+<meta name="twitter:title" content="配置 Android 项目-持续集成">
+<meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Continuous Integration 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous I">
+<meta name="twitter:image" content="https://www.bincn.xyz/配置Android项目/int1.png">
 
 
 
@@ -121,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html"/>
+  <link rel="canonical" href="https://www.bincn.xyz/configuring-android-project-continuous-integration.html"/>
 
 
 
 
 
-  <title>生成 SSH Key 并且访问 GitHub | bincn's blog</title>
+  <title>配置 Android 项目-持续集成 | bincn's blog</title>
   
 
 
@@ -264,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/configuring-android-project-continuous-integration.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="bincn">
@@ -281,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">生成 SSH Key 并且访问 GitHub</h1>
+          <h1 class="post-title" itemprop="name headline">配置 Android 项目-持续集成</h1>
         
 
         <div class="post-meta">
@@ -293,8 +304,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-18T00:00:00+08:00">
+                2017-10-18
               </time>
             
 
@@ -316,8 +327,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SSH/" itemprop="url" rel="index">
-                    <span itemprop="name">SSH</span>
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
                   </a>
                 </span>
 
@@ -353,46 +364,91 @@
       
 
       
-        <blockquote>
-<p>操作环境为 Mac os.</p>
+        <p><strong><em>说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。</em></strong></p>
+<blockquote>
+<ul>
+<li>原文地址：<a href="https://hackernoon.com/configuring-android-project-continuous-integration-e06fd43c4953" target="_blank" rel="noopener">Continuous Integration</a></li>
+<li>原文作者：<a href="https://medium.com/@dmytrodanylyk" target="_blank" rel="noopener">Dmytro Danylyk</a></li>
+</ul>
 </blockquote>
-<h3 id="检查-SSH-key-是否存在"><a href="#检查-SSH-key-是否存在" class="headerlink" title="检查 SSH key 是否存在"></a>检查 SSH key 是否存在</h3><p>在终端输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -al ~/.ssh</span><br></pre></td></tr></table></figure>
-<p>如果没有，终端显示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">No such file or directory</span><br></pre></td></tr></table></figure>
-<p>如果已经存在，则会显示<code>id_rsa</code> 和 <code>id_rsa.pub</code></p>
-<h2 id="生成新的-SSH-key"><a href="#生成新的-SSH-key" class="headerlink" title="生成新的 SSH key"></a>生成新的 SSH key</h2><p>在终端输入：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>其中<code>your_email@example.com</code> 为你在 GitHub 注册时的邮箱</p>
-<p>成功后终端显示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/Users/xxx/.ssh/id_rsa):</span><br></pre></td></tr></table></figure>
-<p>提示你保存 <code>.ssh/id_rsa</code> 的路径，这里直接 enter</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Created directory &apos;/Users/xxx/.ssh&apos;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br></pre></td></tr></table></figure>
-<p>提示输入 passphrase，每次与 GitHub 通信都会要求输入 passphrase，以避免某些「失误」，建议输入</p>
-<p>成功后终端显示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved in /Users/xxx/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /Users/xxx/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 your_email@example.com</span><br><span class="line">The key&apos;s randomart image is:（后面图形省略）</span><br></pre></td></tr></table></figure>
-<h2 id="添加-key-到-SSH"><a href="#添加-key-到-SSH" class="headerlink" title="添加 key 到 SSH"></a>添加 key 到 SSH</h2><p>输入命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-add ~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
-<p>此时会要求输入 passphrase，输入步骤二中填的 passphrase</p>
-<p>成功后，终端显示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Identity added: /Users/xxx/.ssh/id_rsa (/Users/xxx/.ssh/id_rsa)</span><br></pre></td></tr></table></figure>
-<p>最后，在 /Users/xxx/.ssh/ 生成两个文件，id_rsa 和 id_rsa.pub</p>
-<p>此时，SSH key 已经生成成功</p>
-<h2 id="添加-SSH-key-到-GitHub"><a href="#添加-SSH-key-到-GitHub" class="headerlink" title="添加 SSH key 到 GitHub"></a>添加 SSH key 到 GitHub</h2><h3 id="复制-id-rsa-pub-中的所有内容"><a href="#复制-id-rsa-pub-中的所有内容" class="headerlink" title="复制 id_rsa.pub 中的所有内容"></a>复制 id_rsa.pub 中的所有内容</h3><p>打开 id_rsa.pub，终端命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<p>手动复制以 ssh-rsa 到以 <a href="mailto:`your_email@example.com" target="_blank" rel="noopener">`your_email@example.com</a>` 结尾的所有内容</p>
-<p>或者直接输入命令复制 id_rsa.pub 中的所有内容，终端命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<h3 id="登录-GitHub"><a href="#登录-GitHub" class="headerlink" title="登录 GitHub"></a>登录 GitHub</h3><p>打开个人 Settings–&gt;SSH keys–&gt;Add SSH key</p>
-<p>Title 随便写</p>
-<p>Key 粘贴之前复制的内容</p>
-<p>这样 SSH key 就添加的 GitHub</p>
-<h2 id="检测-SSH-key"><a href="#检测-SSH-key" class="headerlink" title="检测 SSH key"></a>检测 SSH key</h2><p>输入命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@github.com</span><br></pre></td></tr></table></figure>
-<p>此时会验证 SSH key 是否可以访问 GitHub</p>
-<p>成功显示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hi your_name! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line">Connection to github.com closed.</span><br></pre></td></tr></table></figure>
-<p> 更多内容可以查看 <a href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/" target="_blank" rel="noopener">GitHub Help</a>.</p>
+<p><strong>本文是配置 Android 项目系列的一部分：</strong></p>
+<ol>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-little-things-that-matter-d6a9d34c1ce0#.36lc3laby" target="_blank" rel="noopener">Little Things That Matter</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-version-name-code-b168952f3323#.rxssffbv6" target="_blank" rel="noopener">Version Name &amp; Code</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-static-code-analysis-tools-b6dd83282921#.6u2proaj9" target="_blank" rel="noopener">Static Code Analyses Tools</a></li>
+<li><a href="https://hackernoon.com/configuring-android-project-continuous-integration-e06fd43c4953" target="_blank" rel="noopener">Continuous Integration</a></li>
+</ol>
+<blockquote>
+<p>我们在这篇文章中讨论的一切都可以在 <a href="https://github.com/dmytrodanylyk/template" target="_blank" rel="noopener">template</a> 项目中找到</p>
+</blockquote>
+<h3 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h3><p>持续集成（CI）——是每次团队成员对版本控制进行更改时自动执行构建的过程。</p>
+<p>通常，构建会进行<a href="http://www.jianshu.com/p/1b85ce6aa44c" target="_blank" rel="noopener">静态代码分析工具检查</a>，测试并最终将 .apk 文件上传到某些分发平台（如 crashlytics beta）。</p>
+<p>持续集成可以帮助你：</p>
+<ul>
+<li>确保编译代码并生成 .apk 文件</li>
+<li>运行静态代码分析工具来检查代码中的错误</li>
+<li>运行测试以确保代码正常工作（并非总是如此）</li>
+<li>分发 .apk 文件</li>
+</ul>
+<p>有很多持续集成平台，其中一些可以在你自己的机器上安装，而另一些则提供基于云的解决方案。</p>
+<p>作为例子，我们将讨论 <a href="https://github.com/" target="_blank" rel="noopener">github</a> 和 <a href="https://www.bitrise.io/about" target="_blank" rel="noopener">bitrise.io</a> 基于云的持续集成，因为它很简单，专注于移动应用并且功能丰富。</p>
+<p><strong>注意：</strong>集成非常有用，例如，你可以在构建成功或发生错误时向 Slack 发送消息。</p>
+<h3 id="建立"><a href="#建立" class="headerlink" title="建立"></a>建立</h3><p>在你创建 bitrise.io 账号并且添加 github 项目之后，有两件重要的事情要做：</p>
+<ul>
+<li>添加 webhooks</li>
+<li>保护分支</li>
+</ul>
+<p>Webhooks 允许在仓库中发生某些事件时通知外部服务。（例如：push, pull-request,等）</p>
+<p>在我们的例子中，当执行 push 和 pull-request 时，bitrise.io 需要启动构建。</p>
+<p>当你的 gitHub 账号和 bitrise.io 账号关联的时候 bitrise.io 会自动的为你添加 webhooks，这是 repo/project 注册中最后一步的一个选项（在“添加新应用程序”页面上）</p>
+<p>如果你想手动添加 Webhooks，打开 bitrise.io 项目再点击 code 并且复制 webhooks url</p>
+<p><img src="配置Android项目/int1.png" alt=""></p>
+<p>接下来打开 github 项目，点击 setting 选中 Webhooks 然后点击添加 webhook 按钮。粘贴 bitrise.io webhook网址，并且选择切换到 Send me everything event。 最后点击添加 webhook 按钮。</p>
+<p><img src="配置Android项目/int2.png" alt=""></p>
+<p>为了保护分支禁用强制推送，防止分支被删除，并可选的在合并之前需要进行状态检查。</p>
+<p>若要保护分支打开 github 项目，点击设置选项卡，选择分支类别并选择你想要保护的分支。</p>
+<p><img src="配置Android项目/int3.png" alt=""></p>
+<p>在 bitrise.io 构建完成之前，状态检查有助于防止合并拉取请求。下面你可以看到 github pull requests 窗口的例子。</p>
+<p><img src="配置Android项目/Status%20check%20in%20progress.png" alt="tatus check in progres"></p>
+<p>​                                Status check in progress</p>
+<p><img src="配置Android项目/Status%20check%20failed.png" alt="tatus check faile"></p>
+<p>​                                Status check failed</p>
+<p><img src="配置Android项目/Status%20check%20completed%20successful.png" alt="tatus check completed successfu"></p>
+<p>​                            Status check completed successful</p>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>每个 bitrise.io 构建都具有以下生命周期：</p>
+<ul>
+<li>建立触发器</li>
+<li>工作流程已执行</li>
+<li>应用就绪</li>
+</ul>
+<p><strong>触发器</strong>定义了“何时”和“什么”构建。要编辑触发器，请打开bitrise.io项目，点击工作流选项卡并选择触发器。</p>
+<p>你可以在下面看到触发器的示例，每当发送从 dev 到 prod 分支的请求时，都会启动名为 prod 的工作流。</p>
+<p><strong>工作流</strong>定义了构建过程的每一步。你可以按照自己的方式去自定义，以适应你的构建过程。打开 bitrise.io 项目编辑工作流程，单击工作流选项卡。在这里你可以创建新的工作流程或编辑当前的。</p>
+<p>下面你可以看到工作流程示例：</p>
+<ul>
+<li>克隆项目仓库</li>
+<li>启动 gradle 任务 assembleProdRelease 生成 .apk</li>
+<li>启动 gradle 任务 lintProdRelease 检查是否没有 Lint 问题</li>
+<li>启动 gradle 任务 pmd 检查是否没有 pmd 问题</li>
+<li>启动 gradle 任务 findbugs 检查是否没有 findbugs 问题</li>
+<li>将 .apk 文件部署到 bitrise.io 进行分发</li>
+</ul>
+<blockquote>
+<p>详细了解请前往 (静态代码检测工具)[<a href="http://www.baidu.com]" target="_blank" rel="noopener">http://www.baidu.com]</a></p>
+</blockquote>
+<p><img src="配置Android项目/Workflow%20editor.png" alt="orkflow edito"></p>
+<p>构建完成后，你将看到关于构建状态，时间，持续时间，日志和生成构件的详细信息。</p>
+<p><img src="配置Android项目/Build%20detail.png" alt="orkflow edito"></p>
+<p>​                                        Build detail</p>
+<p>你还将获得公共链接，你可以从中下载 .apk 文件。</p>
+<p><img src="配置Android项目/ca.png" alt=""></p>
+<p>如果出现问题，你可以检查构建日志。</p>
+<p><img src="配置Android项目/ca1.png" alt=""></p>
+<p>关于 Android+bitrise.io 的更多细节，可以看：</p>
+<ul>
+<li><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-71ae3a94362e" target="_blank" rel="noopener"><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-71ae3a94362e" target="_blank" rel="noopener">How to automate Android build process on Bitrise CI (part 1)</a></a></li>
+<li><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-part-2-b3f8124c29ee" target="_blank" rel="noopener"><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-71ae3a94362e" target="_blank" rel="noopener">How to automate Android build process on Bitrise CI (part 2)</a></a></li>
+</ul>
 
       
     </div>
@@ -413,7 +469,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html" title="生成 SSH Key 并且访问 GitHub">https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html</a>
+    <a href="https://www.bincn.xyz/configuring-android-project-continuous-integration.html" title="配置 Android 项目-持续集成">https://www.bincn.xyz/configuring-android-project-continuous-integration.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -428,9 +484,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/SSH/" rel="tag"># SSH</a>
-          
-            <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+            <a href="/tags/Android/" rel="tag"># Android</a>
           
         </div>
       
@@ -443,14 +497,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/configuring-android-project-static-code-analysis-tools.html" rel="next" title="配置 Android 项目-静态代码分析工具">
+                <i class="fa fa-chevron-left"></i> 配置 Android 项目-静态代码分析工具
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015, 2016.html" rel="prev" title="2015, 2016">
-                2015, 2016 <i class="fa fa-chevron-right"></i>
+              <a href="/elegantly-configure-android-project.html" rel="prev" title="优雅的配置 Android 项目">
+                优雅的配置 Android 项目 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -587,7 +645,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查-SSH-key-是否存在"><span class="nav-number">1.</span> <span class="nav-text">检查 SSH key 是否存在</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成新的-SSH-key"><span class="nav-number"></span> <span class="nav-text">生成新的 SSH key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-key-到-SSH"><span class="nav-number"></span> <span class="nav-text">添加 key 到 SSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-SSH-key-到-GitHub"><span class="nav-number"></span> <span class="nav-text">添加 SSH key 到 GitHub</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#复制-id-rsa-pub-中的所有内容"><span class="nav-number">1.</span> <span class="nav-text">复制 id_rsa.pub 中的所有内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录-GitHub"><span class="nav-number">2.</span> <span class="nav-text">登录 GitHub</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测-SSH-key"><span class="nav-number"></span> <span class="nav-text">检测 SSH key</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立"><span class="nav-number">2.</span> <span class="nav-text">建立</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建"><span class="nav-number">3.</span> <span class="nav-text">构建</span></a></li></ol></div>
             
 
           </div>
