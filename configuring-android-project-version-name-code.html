@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="Jm8dSS8EbHEbdDSvWToFC_2CqT2FIY4i0JJYdsCamak" />
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Version Name &amp;amp; Code 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置 Android 项目-版本名和版本号">
+<meta property="og:url" content="https://www.bincn.xyz/configuring-android-project-version-name-code.html">
+<meta property="og:site_name" content="bincn&#39;s blog">
+<meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Version Name &amp;amp; Code 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_tags.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_describe.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_describe_2.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_describe_3.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_hash.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_code.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/git_timestamp.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/app_info.png">
+<meta property="og:updated_time" content="2018-05-11T07:44:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="配置 Android 项目-版本名和版本号">
+<meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Version Name &amp;amp; Code 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous">
+<meta name="twitter:image" content="https://www.bincn.xyz/配置Android项目/git_tags.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.bincn.xyz/configuring-android-project-version-name-code.html"/>
+
+
+
+
+
+  <title>配置 Android 项目-版本名和版本号 | bincn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">bincn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一名普通的程序员</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/configuring-android-project-version-name-code.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bincn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bincn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">配置 Android 项目-版本名和版本号</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-15T00:00:00+08:00">
+                2017-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong><em>说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。</em></strong></p>
+<blockquote>
+<ul>
+<li>原文地址：<a href="https://medium.com/@dmytrodanylyk/configuring-android-project-little-things-that-matter-d6a9d34c1ce0#.36lc3laby" target="_blank" rel="noopener">Version Name &amp; Code</a></li>
+<li>原文作者：<a href="https://medium.com/@dmytrodanylyk" target="_blank" rel="noopener">Dmytro Danylyk</a></li>
+</ul>
+</blockquote>
+<p><strong>本文是配置 Android 项目系列的一部分：</strong></p>
+<ol>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-little-things-that-matter-d6a9d34c1ce0#.36lc3laby" target="_blank" rel="noopener">Little Things That Matter</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-version-name-code-b168952f3323#.rxssffbv6" target="_blank" rel="noopener">Version Name &amp; Code</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-static-code-analysis-tools-b6dd83282921#.6u2proaj9" target="_blank" rel="noopener">Static Code Analyses Tools</a></li>
+<li><a href="https://hackernoon.com/configuring-android-project-continuous-integration-e06fd43c4953" target="_blank" rel="noopener">Continuous Integration</a></li>
+</ol>
+<blockquote>
+<p>我们在这篇文章中讨论的一切都可以在 <a href="https://github.com/dmytrodanylyk/template" target="_blank" rel="noopener">template</a> 项目中找到</p>
+</blockquote>
+<h2 id="版本名和版本号"><a href="#版本名和版本号" class="headerlink" title="版本名和版本号"></a>版本名和版本号</h2><p>开发人员通常使用硬编码指定 Android 的 versionName 和 versionCode。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defaultConfig &#123;</span><br><span class="line">    ...</span><br><span class="line">    versionCode 1</span><br><span class="line">    versionName &quot;1.0.0&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法有几个缺点：</p>
+<ul>
+<li>你永远不知道哪个 commit 代表一个特定的版本。</li>
+<li>每当你增加 versionCode 和修改 versionName，你必须要修改 build.gradle 文件。</li>
+</ul>
+<p>如果你使用 <a href="https://git-scm.com/" target="_blank" rel="noopener">git</a> 作为你的源代码控制系统，它也可以帮助你生成 Android versionName 和 versionCode。通常的做法是使用 <a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging" target="_blank" rel="noopener">git tags</a> 标示出新发布的版本。</p>
+<p><img src="配置Android项目/git_tags.png" alt=""></p>
+<h2 id="Version-Name"><a href="#Version-Name" class="headerlink" title="Version Name"></a>Version Name</h2><p>我们可以使用 <a href="https://git-scm.com/docs/git-describe" target="_blank" rel="noopener">git describe</a> 命令描述 versionName。</p>
+<blockquote>
+<p>a. 该命令从一个 commit 中找到可以访问的最新的标签。</p>
+<p>b. 如果该标签指向一个 commit，则只显示该标签。</p>
+<p>c. 否则，它将标记名称与标记对象顶部的附加提交数以及最近提交的缩写对象名称后缀。</p>
+</blockquote>
+<h4 id="Example-a-b"><a href="#Example-a-b" class="headerlink" title="Example (a-b)"></a>Example (a-b)</h4><p><img src="配置Android项目/git_describe.png" alt=""></p>
+<ol>
+<li>用标签 1.0 标识特定的 commit</li>
+<li>checkout 这个 commit</li>
+<li>调用 git describe -tags</li>
+<li>输出：1.0</li>
+</ol>
+<p>正如你所看见的，如果你在一个 HEAD commit 中使用 git describe 加上一些标签，它会输出这个标签。</p>
+<h4 id="Example-a-c"><a href="#Example-a-c" class="headerlink" title="Example (a-c)"></a>Example (a-c)</h4><p><img src="配置Android项目/git_describe_2.png" alt=""></p>
+<ol>
+<li>用标签 1.0 标识一个 commit</li>
+<li>增加两个 commit</li>
+<li>调用 git describe -tags</li>
+<li>输出：1.0-2-gdca226a</li>
+</ol>
+<p><img src="配置Android项目/git_describe_3.png" alt=""></p>
+<p>使用 git commit 的哈希值 “1.0–2-gdca226a”，我们可以很容易的找到建立了哪个特定的 commit。</p>
+<p><img src="配置Android项目/git_hash.png" alt=""></p>
+<h2 id="Version-Code"><a href="#Version-Code" class="headerlink" title="Version Code"></a>Version Code</h2><p>对于 versionCode 我们可以使用标签总数。因为每一个 git tag 标识一些版本，下一个版本的 versionCode 永远大于前一个的。</p>
+<p><img src="配置Android项目/git_code.png" alt=""></p>
+<p>在上面的例子中有3个标签。这个值可以用来指定 versionCode。</p>
+<p>但是我们不会为每一个中间版本创建 git tags，所以在开发版本中 HEAD commit 我们可以使用时间戳。</p>
+<p><img src="配置Android项目/git_timestamp.png" alt=""></p>
+<p>在上面的例子中一个 HEAD commit 的时间戳等于1484407970（<br>UNIX 中自1970年1月1日00:00:00 UTC以来的秒数）。这个值将用于我们的 versionCode。如果你希望把它转换为人类可读的时间，可以使用 <a href="http://currentmillis.com/" target="_blank" rel="noopener">currentmillis.com</a>。在我们的例子中是 Sat Jan 14 2017 15:32:50 UTC。 </p>
+<h2 id="Groovy-way-to-use-git"><a href="#Groovy-way-to-use-git" class="headerlink" title="Groovy way to use git"></a>Groovy way to use git</h2><p>配合 git 一起使用，我建议使用库 <a href="https://github.com/ajoberstar/grgit" target="_blank" rel="noopener">grgit</a>。创建以下内容的 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/script-git-version.gradle" target="_blank" rel="noopener">script-git-version.gradle</a> 文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &apos;org.ajoberstar:grgit:1.5.0&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">import org.ajoberstar.grgit.Grgit</span><br><span class="line"></span><br><span class="line">ext &#123;</span><br><span class="line">    git = Grgit.open(currentDir: projectDir)</span><br><span class="line">    gitVersionName = git.describe()</span><br><span class="line">    gitVersionCode = git.tag.list().size()</span><br><span class="line">    gitVersionCodeTime = git.head().time</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task printVersion() &#123;</span><br><span class="line">    println(&quot;Version Name: $gitVersionName&quot;)</span><br><span class="line">    println(&quot;Version Code: $gitVersionCode&quot;)</span><br><span class="line">    println(&quot;Version Code Time: $gitVersionCodeTime&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将它应用到你的 <a href="https://github.com/dmytrodanylyk/template/blob/dev/app/build.gradle#L2" target="_blank" rel="noopener">build.gradle</a> 文件中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.android.application&apos;</span><br><span class="line">apply from: &quot;$project.rootDir/tools/script-git-version.gradle&quot;</span><br></pre></td></tr></table></figure>
+<p>检查版本名称和版本号正确地生成，可以使用 gradle 任务 ./gradlew printVersion，输出类似的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Version Name: 1.0-2-gdca226a</span><br><span class="line">Version Code: 2</span><br><span class="line">Version Code Time: 1484407970</span><br></pre></td></tr></table></figure>
+<p>最后在你的 <a href="https://github.com/dmytrodanylyk/template/blob/master/app/build.gradle#L33" target="_blank" rel="noopener">build.gradle</a> 文件中使用变量 gitVersionName，gitVersionCode 和 gitVersionCodeTime。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">productFlavors &#123;</span><br><span class="line">    dev &#123;</span><br><span class="line">        versionCode gitVersionCodeTime</span><br><span class="line">        versionName gitVersionName</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    prod &#123;</span><br><span class="line">        versionCode gitVersionCode</span><br><span class="line">        versionName gitVersionName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行项目检查应用版本。</p>
+<p><img src="配置Android项目/app_info.png" alt=""></p>
+<p>这种方法的好处：</p>
+<ul>
+<li>不要修改 build.gradle 文件，versionCode 和 versionName 是自动生成的。</li>
+<li>你可以很容易地找到已经建立了什么 commit。</li>
+</ul>
+<blockquote>
+<p>Note: 你可以尝试更多的版本名称：包括分支名、时间戳等。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    bincn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.bincn.xyz/configuring-android-project-version-name-code.html" title="配置 Android 项目-版本名和版本号">https://www.bincn.xyz/configuring-android-project-version-name-code.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/configuring-android-project-little-things-that-matter.html" rel="next" title="配置Android项目-重要的小事情">
+                <i class="fa fa-chevron-left"></i> 配置Android项目-重要的小事情
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/configuring-android-project-static-code-analysis-tools.html" rel="prev" title="配置 Android 项目-静态代码分析工具">
+                配置 Android 项目-静态代码分析工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="bincn" />
+            
+              <p class="site-author-name" itemprop="name">bincn</p>
+              <p class="site-description motion-element" itemprop="description">一名普通的程序员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#版本名和版本号"><span class="nav-number">1.</span> <span class="nav-text">版本名和版本号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Version-Name"><span class="nav-number">2.</span> <span class="nav-text">Version Name</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Example-a-b"><span class="nav-number">2.0.1.</span> <span class="nav-text">Example (a-b)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example-a-c"><span class="nav-number">2.0.2.</span> <span class="nav-text">Example (a-c)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Version-Code"><span class="nav-number">3.</span> <span class="nav-text">Version Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Groovy-way-to-use-git"><span class="nav-number">4.</span> <span class="nav-text">Groovy way to use git</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bincn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

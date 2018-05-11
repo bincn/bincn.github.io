@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="Jm8dSS8EbHEbdDSvWToFC_2CqT2FIY4i0JJYdsCamak" />
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Little Things That Matter 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuou">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置Android项目-重要的小事情">
+<meta property="og:url" content="https://www.bincn.xyz/configuring-android-project-little-things-that-matter.html">
+<meta property="og:site_name" content="bincn&#39;s blog">
+<meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Little Things That Matter 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuou">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/gitignore_io.png">
+<meta property="og:image" content="https://www.bincn.xyz/配置Android项目/tools_folder.png">
+<meta property="og:updated_time" content="2018-05-11T07:46:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="配置Android项目-重要的小事情">
+<meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Little Things That Matter 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuou">
+<meta name="twitter:image" content="https://www.bincn.xyz/配置Android项目/gitignore_io.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.bincn.xyz/configuring-android-project-little-things-that-matter.html"/>
+
+
+
+
+
+  <title>配置Android项目-重要的小事情 | bincn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">bincn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一名普通的程序员</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/configuring-android-project-little-things-that-matter.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bincn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="bincn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">配置Android项目-重要的小事情</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-13T00:00:00+08:00">
+                2017-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong><em>说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。</em></strong></p>
+<blockquote>
+<ul>
+<li>原文地址：<a href="https://medium.com/@dmytrodanylyk/configuring-android-project-little-things-that-matter-d6a9d34c1ce0#.36lc3laby" target="_blank" rel="noopener">Little Things That Matter</a></li>
+<li>原文作者：<a href="https://medium.com/@dmytrodanylyk" target="_blank" rel="noopener">Dmytro Danylyk</a></li>
+</ul>
+</blockquote>
+<p><strong>本文是配置 Android 项目系列的一部分：</strong></p>
+<ol>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-little-things-that-matter-d6a9d34c1ce0#.36lc3laby" target="_blank" rel="noopener">Little Things That Matter</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-version-name-code-b168952f3323#.rxssffbv6" target="_blank" rel="noopener">Version Name &amp; Code</a></li>
+<li><a href="https://medium.com/@dmytrodanylyk/configuring-android-project-static-code-analysis-tools-b6dd83282921#.6u2proaj9" target="_blank" rel="noopener">Static Code Analyses Tools</a></li>
+<li><a href="https://hackernoon.com/configuring-android-project-continuous-integration-e06fd43c4953" target="_blank" rel="noopener">Continuous Integration</a></li>
+</ol>
+<blockquote>
+<p>我们在这篇文章中讨论的一切都可以在 <a href="https://github.com/dmytrodanylyk/template" target="_blank" rel="noopener">template</a> 项目中找到</p>
+</blockquote>
+<h2 id="gitignore"><a href="#gitignore" class="headerlink" title="gitignore"></a>gitignore</h2><p>当你在 Android Studio 中创建一个新的 Android 项目时，它就已经生成了 gitignore 文件，但是通常并不包含所有必要的规则。</p>
+<p>为了快速生成和下载 gitignore 文件，我推荐你使用 <a href="https://www.gitignore.io/" target="_blank" rel="noopener">gitignore.io</a> 网站。只要输入必要的关键词，例如 Android，Intellij，然后点击生成按钮。</p>
+<p><img src="配置Android项目/gitignore_io.png" alt=""></p>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/.gitignore" target="_blank" rel="noopener">gitignore</a> 文件。</p>
+</blockquote>
+<h2 id="tools-folder"><a href="#tools-folder" class="headerlink" title="tools folder"></a>tools folder</h2><p>如果你有一些第三方脚本、规则集或者其他和你项目相关的文件，不要放在根目录下，会造成混乱。（特别是哪些使用项目视图，而不是 Android 视图）</p>
+<p>尝试创建一个文件夹（例如：tools），并把这些文件放入这个文件夹。</p>
+<p><img src="配置Android项目/tools_folder.png" alt=""></p>
+<p>通常我会放入自定义的 gradle 脚本文件、混淆 (<a href="https://developer.android.com/studio/build/shrink-code.html" target="_blank" rel="noopener">proguard</a>) 规则和静态代码分析工具，例如：<a href="https://pmd.github.io/" target="_blank" rel="noopener">pmd</a>、<a href="http://findbugs.sourceforge.net/" target="_blank" rel="noopener">findbugs</a>、<a href="https://developer.android.com/studio/write/lint.html" target="_blank" rel="noopener">lint</a>。</p>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/tree/master/tools" target="_blank" rel="noopener">tools</a> 文件夹</p>
+</blockquote>
+<h2 id="flavors"><a href="#flavors" class="headerlink" title="flavors"></a>flavors</h2><p>Flavors 用于创建不同设置的构建。在大多数情况下，我会设置两种风格，它们的不同在于：</p>
+<ul>
+<li>applicationId</li>
+<li>versionCode / versionName</li>
+<li>server endpoints</li>
+<li>google services keys</li>
+<li>…</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">productFlavors &#123;</span><br><span class="line">    dev &#123;</span><br><span class="line">        signingConfig signingConfigs.debug</span><br><span class="line">        versionCode gitVersionCodeTime</span><br><span class="line">        versionName gitVersionName</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    prod &#123;</span><br><span class="line">        signingConfig signingConfigs.release</span><br><span class="line">        versionCode gitVersionCode</span><br><span class="line">        versionName gitVersionName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/app/build.gradle#L33" target="_blank" rel="noopener">productFlavors</a></p>
+</blockquote>
+<h2 id="keystore"><a href="#keystore" class="headerlink" title="keystore"></a>keystore</h2><p>密钥库是一个二进制文件，包含一个或多个私钥用于签名你的应用程序。</p>
+<p>当你在 IDE 中运行或者调试项目，Android Studio 会通过 Android SDK 工具生成一个调试证书自动的签名你的 APK。</p>
+<p>使用本地调试密钥库时有几个问题：</p>
+<ul>
+<li>365天期满</li>
+<li>通过多台电脑安装应用需要先卸载</li>
+<li>谷歌的服务需要密钥库 SHA-1 指纹</li>
+</ul>
+<p>这就是为什么我通常生成调试密钥库提交到版本控制系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">signingConfigs &#123;</span><br><span class="line">   debug &#123;</span><br><span class="line">       keyAlias &apos;androiddebugkey&apos;</span><br><span class="line">       keyPassword &apos;android&apos;</span><br><span class="line">       storePassword &apos;android&apos;</span><br><span class="line">       storeFile file(&apos;../keystore/debug.keystore&apos;)</span><br><span class="line">   &#125;</span><br><span class="line">   release &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/app/build.gradle#L18" target="_blank" rel="noopener">signingConfigs</a></p>
+</blockquote>
+<h2 id="proguard"><a href="#proguard" class="headerlink" title="proguard"></a>proguard</h2><p>Android 上的混淆器用于三件事：</p>
+<ul>
+<li>缩小未使用的代码，帮助你免于64K限制 (<a href="https://developer.android.com/studio/build/multidex.html" target="_blank" rel="noopener">64k limit</a>)</li>
+<li>优化代码和 APK</li>
+<li>混淆代码，使你的 APK 难逆向工程</li>
+</ul>
+<p>问题是，混淆和代码优化显著增加编译时间，使调试更难。</p>
+<p>这就是为什么最好是针对发布和调试构建使用不同的混淆器规则：</p>
+<ul>
+<li>rules-proguard.pro</li>
+<li>rules-proguard-debug.pro</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">buildTypes &#123;</span><br><span class="line">    release &#123;</span><br><span class="line">        minifyEnabled true</span><br><span class="line">        proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;),</span><br><span class="line">                &quot;$project.rootDir/tools/rules-proguard.pro&quot;</span><br><span class="line">        signingConfig signingConfigs.release</span><br><span class="line">    &#125;</span><br><span class="line">    debug &#123;</span><br><span class="line">        minifyEnabled true</span><br><span class="line">        proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;),</span><br><span class="line">                &quot;$project.rootDir/tools/rules-proguard-debug.pro&quot;</span><br><span class="line">        signingConfig signingConfigs.debug</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于调试构建，混淆器规则必须具备以下内容，强制忽略警告，跳过代码混淆与优化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Add project specific ProGuard rules here.</span><br><span class="line">-dontobfuscate</span><br><span class="line">-dontoptimize</span><br><span class="line">-ignorewarnings</span><br></pre></td></tr></table></figure>
+<p>对于发布版本设置混淆器规则是很难的，因为几乎每一个库都会有它自己特定的规则。幸好有开源库 <a href="https://github.com/krschultz/android-proguard-snippets" target="_blank" rel="noopener">android-proguard-snippets</a>，包含所有主要库的混淆规则。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Add project specific ProGuard rules here.</span><br><span class="line"></span><br><span class="line"># Remove logs</span><br><span class="line">-assumenosideeffects class android.util.Log &#123;</span><br><span class="line">   public static boolean isLoggable(java.lang.String, int);</span><br><span class="line">   public static int v(...);</span><br><span class="line">   public static int i(...);</span><br><span class="line">   public static int w(...);</span><br><span class="line">   public static int d(...);</span><br><span class="line">   public static int e(...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Proguard configurations for common Android libraries:</span><br><span class="line"># https://github.com/krschultz/android-proguard-snippets</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/rules-proguard.pro" target="_blank" rel="noopener">rules-proguard.pro</a> 和 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/rules-proguard-debug.pro" target="_blank" rel="noopener">rules-proguard-debug.pro</a></p>
+</blockquote>
+<h2 id="strict-mode"><a href="#strict-mode" class="headerlink" title="strict mode"></a>strict mode</h2><p>Android 的严格模式 (<a href="https://developer.android.com/reference/android/os/StrictMode.html" target="_blank" rel="noopener">StrictMode</a>) 帮助你检测不同种类的问题：</p>
+<ul>
+<li>可以关闭的对象没有关闭</li>
+<li>在主线程执行文件读取和网络请求</li>
+<li>暴露 uri</li>
+<li>…</li>
+</ul>
+<p>每当检测到这样的问题，它可以显示适当的日志或让应用程序崩溃，这取决于你的配置。</p>
+<p>我建议你在调试版本中打开它，并且使用 <em>detectAll</em> 方法检测各种问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if (BuildConfig.DEBUG) &#123;</span><br><span class="line">    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()</span><br><span class="line">            .detectAll()</span><br><span class="line">            .penaltyLog()</span><br><span class="line">            .build());</span><br><span class="line">    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()</span><br><span class="line">            .detectAll()</span><br><span class="line">            .penaltyLog()</span><br><span class="line">            .build());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以下是示例 log，当你忘记关闭 <em>SQLiteCursor</em> :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">StrictMode: </span><br><span class="line">A resource was acquired at attached stack trace but never released. </span><br><span class="line">See java.io.Closeable for information on avoiding resource leaks.</span><br><span class="line">java.lang.Throwable: Explicit termination method &apos;close&apos; not called</span><br><span class="line">        at dalvik.system.CloseGuard.open(CloseGuard.java:184)</span><br><span class="line">        at android.database.CursorWindow.&lt;init&gt;(CursorWindow.java:111)</span><br><span class="line">        at android.database.AbstractWindowedCursor.clearOrCreateWindow(AbstractWindowedCursor.java:198)</span><br><span class="line">        at android.database.sqlite.SQLiteCursor.fillWindow(SQLiteCursor.java:139)</span><br><span class="line">        at android.database.sqlite.SQLiteCursor.getCount(SQLiteCursor.java:133)</span><br><span class="line">        at android.database.AbstractCursor.moveToPosition(AbstractCursor.java:197)</span><br><span class="line">        at android.database.AbstractCursor.moveToFirst(AbstractCursor.java:237)</span><br><span class="line">        at com.dd.template.MainActivity.onCreate(MainActivity.java:124)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/app/src/main/java/com/dd/template/TemplateApplication.java#L12" target="_blank" rel="noopener">StrictMode</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    bincn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.bincn.xyz/configuring-android-project-little-things-that-matter.html" title="配置Android项目-重要的小事情">https://www.bincn.xyz/configuring-android-project-little-things-that-matter.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/associates-local-Android-project-use-Git.html" rel="next" title="Git 关联本地 Android 项目">
+                <i class="fa fa-chevron-left"></i> Git 关联本地 Android 项目
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/configuring-android-project-version-name-code.html" rel="prev" title="配置 Android 项目-版本名和版本号">
+                配置 Android 项目-版本名和版本号 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="bincn" />
+            
+              <p class="site-author-name" itemprop="name">bincn</p>
+              <p class="site-description motion-element" itemprop="description">一名普通的程序员</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gitignore"><span class="nav-number">1.</span> <span class="nav-text">gitignore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tools-folder"><span class="nav-number">2.</span> <span class="nav-text">tools folder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flavors"><span class="nav-number">3.</span> <span class="nav-text">flavors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keystore"><span class="nav-number">4.</span> <span class="nav-text">keystore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proguard"><span class="nav-number">5.</span> <span class="nav-text">proguard</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strict-mode"><span class="nav-number">6.</span> <span class="nav-text">strict mode</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bincn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
