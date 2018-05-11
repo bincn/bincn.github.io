@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="bincn&#39;s blog">
 <meta property="og:description" content="在 Android 实际项目开发中，会根据特定的需求为 Activity 指定恰当的启动模式。Activity 的启动模式有四种，分别是 standard、singleTop、singleTask、singleInstance。可以在 AndroidManifest.xml 中  标签下添加 android:launchMode 属性来指定启动模式。下面分别看一下这几个启动模式。 standard">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-11T01:39:03.000Z">
+<meta property="og:updated_time" content="2018-05-11T06:11:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Activity 启动模式总结">
 <meta name="twitter:description" content="在 Android 实际项目开发中，会根据特定的需求为 Activity 指定恰当的启动模式。Activity 的启动模式有四种，分别是 standard、singleTop、singleTask、singleInstance。可以在 AndroidManifest.xml 中  标签下添加 android:launchMode 属性来指定启动模式。下面分别看一下这几个启动模式。 standard">
@@ -185,7 +185,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
@@ -193,9 +193,9 @@
       
         
         <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
+          <a href="/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             分类
           </a>
@@ -203,9 +203,9 @@
       
         
         <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
+          <a href="/about/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
@@ -213,9 +213,9 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
+          <a href="/tags/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             标签
           </a>
@@ -223,9 +223,9 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
+          <a href="/archives/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
           </a>
@@ -303,6 +303,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -506,7 +528,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives">
+                <a href="/archives/">
               
                   <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
@@ -514,6 +536,15 @@
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
