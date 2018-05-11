@@ -69,7 +69,7 @@
 
 
 
-  <meta name="keywords" content="个人," />
+  <meta name="keywords" content="SSH,GitHub," />
 
 
 
@@ -80,22 +80,18 @@
 
 
 
-<meta name="description" content="年度总结  生活开始为钱发愁。想想过去一年过的挺憋屈的，收入比 14 年多了，但是年末一算还没有 14 年剩的多，归结为花钱开始缺乏计划。 对未来也更加期待了。14 年底到 15 年初完成了一次职业转变，从传统行业进入移动互联网行业，算是有了比较清晰的职业定位。正在朝着自己所希望的生活迈步。 感恩。身边的她一如既往的在耳边唠叨，虽然现在没车没房，有的只是想把未来过的更好的心，还是愿意去相信面包会">
-<meta name="keywords" content="个人">
+<meta name="description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
+<meta name="keywords" content="SSH,GitHub">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2015, 2016">
-<meta property="og:url" content="https://www.bincn.xyz/2015, 2016.html">
+<meta property="og:title" content="生成 SSH Key 并且访问 GitHub">
+<meta property="og:url" content="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html">
 <meta property="og:site_name" content="bincn&#39;s blog">
-<meta property="og:description" content="年度总结  生活开始为钱发愁。想想过去一年过的挺憋屈的，收入比 14 年多了，但是年末一算还没有 14 年剩的多，归结为花钱开始缺乏计划。 对未来也更加期待了。14 年底到 15 年初完成了一次职业转变，从传统行业进入移动互联网行业，算是有了比较清晰的职业定位。正在朝着自己所希望的生活迈步。 感恩。身边的她一如既往的在耳边唠叨，虽然现在没车没房，有的只是想把未来过的更好的心，还是愿意去相信面包会">
+<meta property="og:description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.bincn.xyz/2015-2016/849460-30b55c3bff4090bc.jpg">
-<meta property="og:image" content="https://www.bincn.xyz/2015-2016/849460-5e1a8e0f96f7b8ad.jpg">
-<meta property="og:image" content="https://www.bincn.xyz/2015-2016/849460-3f8dfd899d38c14a.jpg">
-<meta property="og:updated_time" content="2018-05-11T03:36:24.000Z">
+<meta property="og:updated_time" content="2018-05-11T03:36:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2015, 2016">
-<meta name="twitter:description" content="年度总结  生活开始为钱发愁。想想过去一年过的挺憋屈的，收入比 14 年多了，但是年末一算还没有 14 年剩的多，归结为花钱开始缺乏计划。 对未来也更加期待了。14 年底到 15 年初完成了一次职业转变，从传统行业进入移动互联网行业，算是有了比较清晰的职业定位。正在朝着自己所希望的生活迈步。 感恩。身边的她一如既往的在耳边唠叨，虽然现在没车没房，有的只是想把未来过的更好的心，还是愿意去相信面包会">
-<meta name="twitter:image" content="https://www.bincn.xyz/2015-2016/849460-30b55c3bff4090bc.jpg">
+<meta name="twitter:title" content="生成 SSH Key 并且访问 GitHub">
+<meta name="twitter:description" content="操作环境为 Mac os.  检查 SSH key 是否存在在终端输入： 1ls -al ~/.ssh 如果没有，终端显示如下： 1No such file or directory 如果已经存在，则会显示id_rsa 和 id_rsa.pub 生成新的 SSH key在终端输入： 1ssh-keygen -t rsa -C &amp;quot;your_email@example.com&amp;quot;">
 
 
 
@@ -125,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://www.bincn.xyz/2015, 2016.html"/>
+  <link rel="canonical" href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html"/>
 
 
 
 
 
-  <title>2015, 2016 | bincn's blog</title>
+  <title>生成 SSH Key 并且访问 GitHub | bincn's blog</title>
   
 
 
@@ -258,7 +254,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/2015, 2016.html">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="bincn">
@@ -275,7 +271,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">2015, 2016</h1>
+          <h1 class="post-title" itemprop="name headline">生成 SSH Key 并且访问 GitHub</h1>
         
 
         <div class="post-meta">
@@ -287,8 +283,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-14T00:00:00+08:00">
-                2016-02-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
               </time>
             
 
@@ -326,30 +322,44 @@
 
       
         <blockquote>
-<p>年度总结</p>
+<p>操作环境为 Mac os.</p>
 </blockquote>
-<h2 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h2><p>开始为钱发愁。想想过去一年过的挺憋屈的，收入比 14 年多了，但是年末一算还没有 14 年剩的多，归结为花钱开始缺乏计划。</p>
-<p>对未来也更加期待了。14 年底到 15 年初完成了一次职业转变，从传统行业进入移动互联网行业，算是有了比较清晰的职业定位。正在朝着自己所希望的生活迈步。</p>
-<p>感恩。身边的她一如既往的在耳边唠叨，虽然现在没车没房，有的只是想把未来过的更好的心，还是愿意去相信面包会有的，牛奶也会有的，感恩她做的一切。未来的路上可能磨难很多，庆幸的是我们都能不忘初心。像普通情侣一样，我们也会吵吵闹闹，但是现在我们更理解对方了，也相信未来可以靠自己创造。</p>
-<h2 id="工作"><a href="#工作" class="headerlink" title="工作"></a>工作</h2><p>同事眼中的我：负责任，进步快。作为一个新人，受到前辈这样的评价，挺高兴的。过去一年大部分时间都花在工作上，感觉思维有些固化了，生活过得不够精彩了，新的一年比重适当的往其他方面倾斜，但是也不能把工作落下。</p>
-<p> <img src="2015-2016/849460-30b55c3bff4090bc.jpg" alt=""></p>
-<p>自己眼中的我：</p>
-<ol>
-<li>项目参与度还不够。作为一名 Android 应用开发者，时常要根据需求，写业务代码，开发新功能，这是正常工作状态。但是没有思考需求本身的意义，缺少自己的思考。新的一年要多思考，在适当的时候应该停下脚步，不要盲目的“垒”代码。</li>
-<li>不够专注和耐心。既然是搞技术，不能够专注于技术本身，提升技术水平。不够耐心，体现在遇到技术问题容易急躁，可能是因为新手，技术掌握不牢。这两点都是需要在新的一年里加大投入的。期待技术更上一层楼。</li>
-<li><p>死胡同，效率低。</p>
-<p><img src="2015-2016/849460-5e1a8e0f96f7b8ad.jpg" alt=""></p>
-</li>
-</ol>
-<p>2015 年给自己打 80 分。分为两个：2015 上半年，这半年主要在学习 Android 开发技术，顺利学完并且找好工作；2015 年下半年，这半年主要就是在公司里实践。总的来说，2015 年过得虽然有点苦，但是还算过得去。在工作中，不足的地方还有很多，列举不完。在以后的日子里，发现问题并改正问题。2016 上半年可能要换工作，又要开始忙碌的找工作之旅。期待 2016 变得越来越好。</p>
-<p> <img src="2015-2016/849460-3f8dfd899d38c14a.jpg" alt=""></p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ol>
-<li>认真具体的健身。2015 这一年运动的时间太少，导致自己身体比以前差了，2016 开始认真具体的健身。</li>
-<li>旅游，不管是省内还是省外。</li>
-<li>学习语言：Python.</li>
-<li>提升 Android 开发技术。</li>
-<li>有点难的任务：买房。</li>
-</ol>
+<h3 id="检查-SSH-key-是否存在"><a href="#检查-SSH-key-是否存在" class="headerlink" title="检查 SSH key 是否存在"></a>检查 SSH key 是否存在</h3><p>在终端输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -al ~/.ssh</span><br></pre></td></tr></table></figure>
+<p>如果没有，终端显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">No such file or directory</span><br></pre></td></tr></table></figure>
+<p>如果已经存在，则会显示<code>id_rsa</code> 和 <code>id_rsa.pub</code></p>
+<h2 id="生成新的-SSH-key"><a href="#生成新的-SSH-key" class="headerlink" title="生成新的 SSH key"></a>生成新的 SSH key</h2><p>在终端输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>其中<code>your_email@example.com</code> 为你在 GitHub 注册时的邮箱</p>
+<p>成功后终端显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/Users/xxx/.ssh/id_rsa):</span><br></pre></td></tr></table></figure>
+<p>提示你保存 <code>.ssh/id_rsa</code> 的路径，这里直接 enter</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Created directory &apos;/Users/xxx/.ssh&apos;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br></pre></td></tr></table></figure>
+<p>提示输入 passphrase，每次与 GitHub 通信都会要求输入 passphrase，以避免某些「失误」，建议输入</p>
+<p>成功后终端显示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved in /Users/xxx/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /Users/xxx/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 your_email@example.com</span><br><span class="line">The key&apos;s randomart image is:（后面图形省略）</span><br></pre></td></tr></table></figure>
+<h2 id="添加-key-到-SSH"><a href="#添加-key-到-SSH" class="headerlink" title="添加 key 到 SSH"></a>添加 key 到 SSH</h2><p>输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-add ~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
+<p>此时会要求输入 passphrase，输入步骤二中填的 passphrase</p>
+<p>成功后，终端显示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Identity added: /Users/xxx/.ssh/id_rsa (/Users/xxx/.ssh/id_rsa)</span><br></pre></td></tr></table></figure>
+<p>最后，在 /Users/xxx/.ssh/ 生成两个文件，id_rsa 和 id_rsa.pub</p>
+<p>此时，SSH key 已经生成成功</p>
+<h2 id="添加-SSH-key-到-GitHub"><a href="#添加-SSH-key-到-GitHub" class="headerlink" title="添加 SSH key 到 GitHub"></a>添加 SSH key 到 GitHub</h2><h3 id="复制-id-rsa-pub-中的所有内容"><a href="#复制-id-rsa-pub-中的所有内容" class="headerlink" title="复制 id_rsa.pub 中的所有内容"></a>复制 id_rsa.pub 中的所有内容</h3><p>打开 id_rsa.pub，终端命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>手动复制以 ssh-rsa 到以 <a href="mailto:`your_email@example.com" target="_blank" rel="noopener">`your_email@example.com</a>` 结尾的所有内容</p>
+<p>或者直接输入命令复制 id_rsa.pub 中的所有内容，终端命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<h3 id="登录-GitHub"><a href="#登录-GitHub" class="headerlink" title="登录 GitHub"></a>登录 GitHub</h3><p>打开个人 Settings–&gt;SSH keys–&gt;Add SSH key</p>
+<p>Title 随便写</p>
+<p>Key 粘贴之前复制的内容</p>
+<p>这样 SSH key 就添加的 GitHub</p>
+<h2 id="检测-SSH-key"><a href="#检测-SSH-key" class="headerlink" title="检测 SSH key"></a>检测 SSH key</h2><p>输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh git@github.com</span><br></pre></td></tr></table></figure>
+<p>此时会验证 SSH key 是否可以访问 GitHub</p>
+<p>成功显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hi your_name! You&apos;ve successfully authenticated, but GitHub does not provide shell access.</span><br><span class="line">Connection to github.com closed.</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -370,7 +380,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.bincn.xyz/2015, 2016.html" title="2015, 2016">https://www.bincn.xyz/2015, 2016.html</a>
+    <a href="https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html" title="生成 SSH Key 并且访问 GitHub">https://www.bincn.xyz/generating-SSH-key-and-connecting-to-GitHub.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -385,7 +395,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/个人/" rel="tag"># 个人</a>
+            <a href="/tags/SSH/" rel="tag"># SSH</a>
+          
+            <a href="/tags/GitHub/" rel="tag"># GitHub</a>
           
         </div>
       
@@ -398,18 +410,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/generating-SSH-key-and-connecting-to-GitHub.html" rel="next" title="生成 SSH Key 并且访问 GitHub">
-                <i class="fa fa-chevron-left"></i> 生成 SSH Key 并且访问 GitHub
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/android-activity-launchmode-summary.html" rel="prev" title="Android Activity 启动模式总结">
-                Android Activity 启动模式总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2015, 2016.html" rel="prev" title="2015, 2016">
+                2015, 2016 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -537,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#生活"><span class="nav-number">1.</span> <span class="nav-text">生活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作"><span class="nav-number">2.</span> <span class="nav-text">工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">3.</span> <span class="nav-text">目标</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查-SSH-key-是否存在"><span class="nav-number">1.</span> <span class="nav-text">检查 SSH key 是否存在</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成新的-SSH-key"><span class="nav-number"></span> <span class="nav-text">生成新的 SSH key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-key-到-SSH"><span class="nav-number"></span> <span class="nav-text">添加 key 到 SSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加-SSH-key-到-GitHub"><span class="nav-number"></span> <span class="nav-text">添加 SSH key 到 GitHub</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#复制-id-rsa-pub-中的所有内容"><span class="nav-number">1.</span> <span class="nav-text">复制 id_rsa.pub 中的所有内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录-GitHub"><span class="nav-number">2.</span> <span class="nav-text">登录 GitHub</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测-SSH-key"><span class="nav-number"></span> <span class="nav-text">检测 SSH key</span></a></div>
             
 
           </div>
