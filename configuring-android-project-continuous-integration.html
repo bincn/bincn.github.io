@@ -88,21 +88,21 @@
 <meta property="og:site_name" content="bincn&#39;s blog">
 <meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Continuous Integration 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous I">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/int1.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/int2.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/int3.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/Status%20check%20in%20progress.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/Status%20check%20failed.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/Status%20check%20completed%20successful.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/Workflow%20editor.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/Build%20detail.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/ca.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/ca1.png">
-<meta property="og:updated_time" content="2018-05-25T15:47:07.000Z">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_int1.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_int2.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_int3.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_in_progress.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_failed.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_completed_successful.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_workflow_editor.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_build_detail.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_ca.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_ca1.png">
+<meta property="og:updated_time" content="2018-09-09T13:38:38.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="配置 Android 项目-持续集成">
 <meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Continuous Integration 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuous I">
-<meta name="twitter:image" content="https://www.bincn.xyz/images/配置Android项目/int1.png">
+<meta name="twitter:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_int1.png">
 
 
 
@@ -399,18 +399,18 @@
 <p>在我们的例子中，当执行 push 和 pull-request 时，bitrise.io 需要启动构建。</p>
 <p>当你的 gitHub 账号和 bitrise.io 账号关联的时候 bitrise.io 会自动的为你添加 webhooks，这是 repo/project 注册中最后一步的一个选项（在“添加新应用程序”页面上）</p>
 <p>如果你想手动添加 Webhooks，打开 bitrise.io 项目再点击 code 并且复制 webhooks url</p>
-<p><img src="/images/配置Android项目/int1.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_int1.png" alt=""></p>
 <p>接下来打开 github 项目，点击 setting 选中 Webhooks 然后点击添加 webhook 按钮。粘贴 bitrise.io webhook网址，并且选择切换到 Send me everything event。 最后点击添加 webhook 按钮。</p>
-<p><img src="/images/配置Android项目/int2.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_int2.png" alt=""></p>
 <p>为了保护分支禁用强制推送，防止分支被删除，并可选的在合并之前需要进行状态检查。</p>
 <p>若要保护分支打开 github 项目，点击设置选项卡，选择分支类别并选择你想要保护的分支。</p>
-<p><img src="/images/配置Android项目/int3.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_int3.png" alt=""></p>
 <p>在 bitrise.io 构建完成之前，状态检查有助于防止合并拉取请求。下面你可以看到 github pull requests 窗口的例子。</p>
-<p><img src="/images/配置Android项目/Status%20check%20in%20progress.png" alt="tatus check in progres"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_in_progress.png" alt="tatus check in progres"></p>
 <p>​                                Status check in progress</p>
-<p><img src="/images/配置Android项目/Status%20check%20failed.png" alt="tatus check faile"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_failed.png" alt="tatus check faile"></p>
 <p>​                                Status check failed</p>
-<p><img src="/images/配置Android项目/Status%20check%20completed%20successful.png" alt="tatus check completed successfu"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_status_check_completed_successful.png" alt="tatus check completed successfu"></p>
 <p>​                            Status check completed successful</p>
 <h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>每个 bitrise.io 构建都具有以下生命周期：</p>
 <ul>
@@ -433,14 +433,14 @@
 <blockquote>
 <p>详细了解请前往 (静态代码检测工具)[<a href="http://www.baidu.com]" target="_blank" rel="noopener">http://www.baidu.com]</a></p>
 </blockquote>
-<p><img src="/images/配置Android项目/Workflow%20editor.png" alt="orkflow edito"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_workflow_editor.png" alt="orkflow edito"></p>
 <p>构建完成后，你将看到关于构建状态，时间，持续时间，日志和生成构件的详细信息。</p>
-<p><img src="/images/配置Android项目/Build%20detail.png" alt="orkflow edito"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_build_detail.png" alt="orkflow edito"></p>
 <p>​                                        Build detail</p>
 <p>你还将获得公共链接，你可以从中下载 .apk 文件。</p>
-<p><img src="/images/配置Android项目/ca.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_ca.png" alt=""></p>
 <p>如果出现问题，你可以检查构建日志。</p>
-<p><img src="/images/配置Android项目/ca1.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_ca1.png" alt=""></p>
 <p>关于 Android+bitrise.io 的更多细节，可以看：</p>
 <ul>
 <li><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-71ae3a94362e" target="_blank" rel="noopener"><a href="https://medium.com/@hesam.kamalan/how-to-automate-android-build-process-on-bitrise-ci-71ae3a94362e" target="_blank" rel="noopener">How to automate Android build process on Bitrise CI (part 1)</a></a></li>
