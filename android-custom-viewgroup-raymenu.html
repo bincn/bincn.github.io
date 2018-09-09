@@ -88,13 +88,13 @@
 <meta property="og:site_name" content="bincn&#39;s blog">
 <meta property="og:description" content="先来看一下实现的效果  github 上有大神写的类似效果的项目：ArcMenu 我这个思路来源于鸿洋大神的 blog，感谢！http://blog.csdn.net/lmj623565791/article/details/37567907 实现思路标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.bincn.xyz/images/RayMenu.gif">
-<meta property="og:image" content="https://www.bincn.xyz/images/RayMenu_calcu.png">
-<meta property="og:updated_time" content="2018-05-11T06:11:43.000Z">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/raymenu.gif">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/raymenu-calcu.png">
+<meta property="og:updated_time" content="2018-09-09T13:43:46.127Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 自定义 ViewGroup 实现 RayMenu">
 <meta name="twitter:description" content="先来看一下实现的效果  github 上有大神写的类似效果的项目：ArcMenu 我这个思路来源于鸿洋大神的 blog，感谢！http://blog.csdn.net/lmj623565791/article/details/37567907 实现思路标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item">
-<meta name="twitter:image" content="https://www.bincn.xyz/images/RayMenu.gif">
+<meta name="twitter:image" content="http://peos3wdpu.bkt.clouddn.com/raymenu.gif">
 
 
 
@@ -347,12 +347,12 @@
 
       
         <p>先来看一下实现的效果</p>
-<p><img src="/images/RayMenu.gif" alt="RayMenu.gif"></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/raymenu.gif" alt="RayMenu.gif"></p>
 <p>github 上有大神写的类似效果的项目：<br><a href="https://github.com/daCapricorn/ArcMenu" target="_blank" rel="noopener">ArcMenu</a></p>
 <p>我这个思路来源于鸿洋大神的 blog，感谢！<br><a href="http://blog.csdn.net/lmj623565791/article/details/37567907" target="_blank" rel="noopener">http://blog.csdn.net/lmj623565791/article/details/37567907</a></p>
 <h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>标题已经说了是自定义 ViewGroup，ViewGroup 中的第一个子View作为 Menu 开启的按钮，之后的6个子 View 作为 Item</p>
 <h3 id="动画效果实现"><a href="#动画效果实现" class="headerlink" title="动画效果实现"></a>动画效果实现</h3><p>这里我用 TranslateAnimation 实现，对动画有了解的同学应该知道，TranslateAnimation 本质是不会改变按钮的位置，而我们的按钮在动画结束后是要点击的。做法：默认让子菜单就已经在目标位置，然后 GONE，当点击加号时，让按钮 VISIBLE，开始动画，把起始位置设为定点，终点位置就是我们隐藏的区域。当然，也可以用属性动画实现这个效果。</p>
-<h3 id="确定位置"><a href="#确定位置" class="headerlink" title="确定位置"></a>确定位置</h3><p><img src="/images/RayMenu_calcu.png" alt="calcu"></p>
+<h3 id="确定位置"><a href="#确定位置" class="headerlink" title="确定位置"></a>确定位置</h3><p><img src="http://peos3wdpu.bkt.clouddn.com/raymenu-calcu.png" alt="calcu"></p>
 <p>如上图，我们可以计算出1-3号 item 的位置，同理也可以计算出4-6号 item 的位置，而6号 item 的位置就是 menu 开启按钮的位置，当 menu 打开时，menu 开启按钮隐藏，反之显示。</p>
 <h2 id="接下来看具体实现"><a href="#接下来看具体实现" class="headerlink" title="接下来看具体实现"></a>接下来看具体实现</h2><h3 id="onMeasure"><a href="#onMeasure" class="headerlink" title="onMeasure()"></a>onMeasure()</h3><p>方法比较简单，计算子 View 的大小，获取 ViewGroup 的宽度、高度、paddingLeft 和 paddingRight，计算我们自定义 ViewGroup 实际显示的宽度</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</span><br><span class="line">    // 当前ViewGroup的宽度和高度</span><br><span class="line">    mMeasuredWidth = getMeasuredWidth();</span><br><span class="line">    mMeasuredHeight = getMeasuredHeight();</span><br><span class="line">    mPaddingLeft = getPaddingLeft();</span><br><span class="line">    mPaddingRight = getPaddingRight();</span><br><span class="line"></span><br><span class="line">    // ViewGroup实际可显示的宽，减去左右的padding</span><br><span class="line">    mActualWidth = mMeasuredWidth - mPaddingLeft - mPaddingRight;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; getChildCount(); i++) &#123;</span><br><span class="line">        getChildAt(i).measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    super.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

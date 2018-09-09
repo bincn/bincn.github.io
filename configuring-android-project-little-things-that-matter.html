@@ -88,13 +88,13 @@
 <meta property="og:site_name" content="bincn&#39;s blog">
 <meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Little Things That Matter 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuou">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/gitignore_io.png">
-<meta property="og:image" content="https://www.bincn.xyz/images/配置Android项目/tools_folder.png">
-<meta property="og:updated_time" content="2018-05-26T01:00:09.000Z">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_gitignore_io.png">
+<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_tools_folder.png">
+<meta property="og:updated_time" content="2018-09-09T13:42:46.829Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="配置 Android 项目-重要的小事情">
 <meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Little Things That Matter 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuou">
-<meta name="twitter:image" content="https://www.bincn.xyz/images/配置Android项目/gitignore_io.png">
+<meta name="twitter:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_gitignore_io.png">
 
 
 
@@ -372,13 +372,13 @@
 </blockquote>
 <h2 id="gitignore"><a href="#gitignore" class="headerlink" title="gitignore"></a>gitignore</h2><p>当你在 Android Studio 中创建一个新的 Android 项目时，它就已经生成了 gitignore 文件，但是通常并不包含所有必要的规则。</p>
 <p>为了快速生成和下载 gitignore 文件，我推荐你使用 <a href="https://www.gitignore.io/" target="_blank" rel="noopener">gitignore.io</a> 网站。只要输入必要的关键词，例如 Android，Intellij，然后点击生成按钮。</p>
-<p><img src="/images/配置Android项目/gitignore_io.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_gitignore_io.png" alt=""></p>
 <blockquote>
 <p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/blob/master/.gitignore" target="_blank" rel="noopener">gitignore</a> 文件。</p>
 </blockquote>
 <h2 id="tools-folder"><a href="#tools-folder" class="headerlink" title="tools folder"></a>tools folder</h2><p>如果你有一些第三方脚本、规则集或者其他和你项目相关的文件，不要放在根目录下，会造成混乱。（特别是哪些使用项目视图，而不是 Android 视图）</p>
 <p>尝试创建一个文件夹（例如：tools），并把这些文件放入这个文件夹。</p>
-<p><img src="/images/配置Android项目/tools_folder.png" alt=""></p>
+<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_tools_folder.png" alt=""></p>
 <p>通常我会放入自定义的 gradle 脚本文件、混淆 (<a href="https://developer.android.com/studio/build/shrink-code.html" target="_blank" rel="noopener">proguard</a>) 规则和静态代码分析工具，例如：<a href="https://pmd.github.io/" target="_blank" rel="noopener">pmd</a>、<a href="http://findbugs.sourceforge.net/" target="_blank" rel="noopener">findbugs</a>、<a href="https://developer.android.com/studio/write/lint.html" target="_blank" rel="noopener">lint</a>。</p>
 <blockquote>
 <p>查看 template 项目的 <a href="https://github.com/dmytrodanylyk/template/tree/master/tools" target="_blank" rel="noopener">tools</a> 文件夹</p>
