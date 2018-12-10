@@ -88,14 +88,14 @@
 <meta property="og:site_name" content="bincn 视界">
 <meta property="og:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Static Code Analyses Tools 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_lint_overview.png">
-<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_findbugs_overview.png">
-<meta property="og:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_pmd.png">
-<meta property="og:updated_time" content="2018-09-09T13:41:02.493Z">
+<meta property="og:image" content="http://res.bincn.xyz/configuring_project_lint_overview.png">
+<meta property="og:image" content="http://res.bincn.xyz/configuring_project_findbugs_overview.png">
+<meta property="og:image" content="http://res.bincn.xyz/configuring_project_pmd.png">
+<meta property="og:updated_time" content="2018-12-10T06:41:20.114Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="配置 Android 项目-静态代码分析工具">
 <meta name="twitter:description" content="说明：如果你发现文章中有翻译不恰当的地方，欢迎指出，我会马上改正。   原文地址：Static Code Analyses Tools 原文作者：Dmytro Danylyk   本文是配置 Android 项目系列的一部分：  Little Things That Matter Version Name &amp;amp; Code Static Code Analyses Tools Continuo">
-<meta name="twitter:image" content="http://peos3wdpu.bkt.clouddn.com/configuring_project_lint_overview.png">
+<meta name="twitter:image" content="http://res.bincn.xyz/configuring_project_lint_overview.png">
 
 
 
@@ -394,7 +394,7 @@
 <h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><p>重建你的项目并且运行命令 ./gradlew lint. 如果它发现一些问题，你会看到类似的输出。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./gradlew lint</span><br><span class="line"></span><br><span class="line">Execution failed for task &apos;:app:lint.</span><br><span class="line">Lint found errors in the project; aborting build.</span><br><span class="line">Wrote HTML report to: template/app/build/outputs/lint/lint.html</span><br></pre></td></tr></table></figure>
 <p>当你打开 lint.html 报告文件，你将看到如何解决问题的说明和建议列表。</p>
-<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_lint_overview.png" alt=""></p>
+<p><img src="http://res.bincn.xyz/configuring_project_lint_overview.png" alt=""></p>
 <p>如果你想忽略此问题，请将以下规则添加到 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/rules-lint.xml" target="_blank" rel="noopener">rules-lint.xml</a> 文件中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;lint&gt;</span><br><span class="line">    &lt;issue id=&quot;GoogleAppIndexingWarning&quot; severity=&quot;ignore&quot; /&gt;</span><br><span class="line">&lt;/lint&gt;</span><br></pre></td></tr></table></figure>
 <p>注意：还有其他方法你可以 <a href="http://tools.android.com/tips/lint/suppressing-lint-warnings" target="_blank" rel="noopener">抑制 lint 警告</a>。 有关 lint 的更多信息，请访问 <a href="http://tools.android.com/tips/lint" target="_blank" rel="noopener">官方网站</a>.</p>
@@ -417,7 +417,7 @@
 <p>重建你的项目，然后使用命令 ./gradlew findbugs 运行 findbugs. 如果它发现一些问题，你会看到类似的输出。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;./gradlew findbugs</span><br><span class="line">Execution failed for task &apos;:app:findbugs&apos;.</span><br><span class="line">FindBugs rule violations were found. </span><br><span class="line">See the report at: template/app/build/outputs/findbugs/findbugs.html</span><br></pre></td></tr></table></figure>
 <p>当你打开 findbugs.html 报告文件，你将看到如何解决问题的说明和建议列表。</p>
-<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_findbugs_overview.png" alt=""></p>
+<p><img src="http://res.bincn.xyz/configuring_project_findbugs_overview.png" alt=""></p>
 <p>如果你想忽略此问题，请将以下规则添加到 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/rules-findbugs.xml" target="_blank" rel="noopener">rules-findbugs.xml</a> 文件中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;FindBugsFilter&gt;</span><br><span class="line">   &lt;Bug pattern=&quot;SF_SWITCH_NO_DEFAULT&quot; /&gt;</span><br><span class="line">   &lt;Bug pattern=&quot;SF_SWITCH_FALLTHROUGH&quot; /&gt;</span><br><span class="line">&lt;/FindBugsFilter&gt;</span><br></pre></td></tr></table></figure>
 <p>注意：还有一些其他方法可以 <a href="http://findbugs.sourceforge.net/manual/filter.html" target="_blank" rel="noopener">抑制 findbugs 警告</a>。 有关 findbugs 的更多信息，请访问<a href="http://findbugs.sourceforge.net/manual/index.html" target="_blank" rel="noopener">官方网站</a>。</p>
@@ -439,7 +439,7 @@
 <p>重建你的项目，然后使用命令 ./gradlew pmd. 如果发现某些问题，你将看到类似的输出。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;./gradlew pmd</span><br><span class="line">Execution failed for task &apos;:app:pmd.</span><br><span class="line">7 PMD rule violations were found. </span><br><span class="line">See the report at: template/app/build/outputs/pmd/pmd.html</span><br></pre></td></tr></table></figure>
 <p>当你打开 pmd.xml 报告文件时，你将看到如何解决问题的说明和建议列表。</p>
-<p><img src="http://peos3wdpu.bkt.clouddn.com/configuring_project_pmd.png" alt=""></p>
+<p><img src="http://res.bincn.xyz/configuring_project_pmd.png" alt=""></p>
 <p>如果你想忽略这个问题，请将以下规则添加到 <a href="https://github.com/dmytrodanylyk/template/blob/master/tools/rules-pmd.xml" target="_blank" rel="noopener">rules-pmd.xml</a> 文件中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;ruleset xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">    xmlns=&quot;http://pmd.sourceforge.net/ruleset/2.0.0&quot;</span><br><span class="line">    xsi:schemaLocation=&quot;http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;rule ref=&quot;rulesets/java/basic.xml&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;rule ref=&quot;rulesets/java/braces.xml&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;rule ref=&quot;rulesets/java/strings.xml&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;rule ref=&quot;rulesets/java/design.xml&quot; &gt;</span><br><span class="line">       &lt;exclude name=&quot;AvoidDeeplyNestedIfStmts&quot;/&gt;</span><br><span class="line">    &lt;/rule&gt;</span><br><span class="line"></span><br><span class="line">    &lt;rule ref=&quot;rulesets/java/unusedcode.xml&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/ruleset&gt;</span><br></pre></td></tr></table></figure>
 <p>注意：还有其他方法可以 <a href="https://pmd.github.io/pmd-5.5.4/usage/suppressing.html" target="_blank" rel="noopener">抑制 pmd 警告</a>。 有关 pmd 的更多信息可以在 <a href="https://pmd.github.io/pmd-5.5.4/index.html" target="_blank" rel="noopener">官方网站</a> 上查看。</p>
