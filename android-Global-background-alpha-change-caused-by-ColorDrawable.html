@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="Jm8dSS8EbHEbdDSvWToFC_2CqT2FIY4i0JJYdsCamak" />
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在最近项目的版本迭代中测试同学发现了一个偶现的 bug，比较容易的复现路径是在该页面快速来回滑动列表，bug 表现为标题栏背景变透明，进一步排查发现 App 中使用到该色值做背景的地方全部都被改了，即以色值 #ffffff 做背景的透明度都被改了。 初步分析查看代码发现问题页面使用到该色值的地方主要有两个：  xml 设置控件背景  android:background=&amp;quot;@color/">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ColorDrawable 引起的全局背景 alpha 变化问题">
+<meta property="og:url" content="https://www.bincn.xyz/android-Global-background-alpha-change-caused-by-ColorDrawable.html">
+<meta property="og:site_name" content="小马的博客">
+<meta property="og:description" content="在最近项目的版本迭代中测试同学发现了一个偶现的 bug，比较容易的复现路径是在该页面快速来回滑动列表，bug 表现为标题栏背景变透明，进一步排查发现 App 中使用到该色值做背景的地方全部都被改了，即以色值 #ffffff 做背景的透明度都被改了。 初步分析查看代码发现问题页面使用到该色值的地方主要有两个：  xml 设置控件背景  android:background=&amp;quot;@color/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://res.bincn.xyz/image-20200421110826921.webp">
+<meta property="og:image" content="http://res.bincn.xyz/image-20200421143328799.webp">
+<meta property="og:image" content="http://res.bincn.xyz/image-2020042114332980.webp">
+<meta property="og:updated_time" content="2020-05-10T13:35:35.113Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ColorDrawable 引起的全局背景 alpha 变化问题">
+<meta name="twitter:description" content="在最近项目的版本迭代中测试同学发现了一个偶现的 bug，比较容易的复现路径是在该页面快速来回滑动列表，bug 表现为标题栏背景变透明，进一步排查发现 App 中使用到该色值做背景的地方全部都被改了，即以色值 #ffffff 做背景的透明度都被改了。 初步分析查看代码发现问题页面使用到该色值的地方主要有两个：  xml 设置控件背景  android:background=&amp;quot;@color/">
+<meta name="twitter:image" content="http://res.bincn.xyz/image-20200421110826921.webp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.bincn.xyz/android-Global-background-alpha-change-caused-by-ColorDrawable.html"/>
+
+
+
+
+
+  <title>ColorDrawable 引起的全局背景 alpha 变化问题 | 小马的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小马的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Coding, Simple and Native</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.bincn.xyz/android-Global-background-alpha-change-caused-by-ColorDrawable.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="bincn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ColorDrawable 引起的全局背景 alpha 变化问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-20T00:00:00+08:00">
+                2020-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在最近项目的版本迭代中测试同学发现了一个偶现的 bug，比较容易的复现路径是在该页面快速来回滑动列表，bug 表现为标题栏背景变透明，进一步排查发现 App 中使用到该色值做背景的地方全部都被改了，即以色值 <code>#ffffff</code> 做背景的透明度都被改了。</p>
+<h2 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h2><p>查看代码发现问题页面使用到该色值的地方主要有两个：</p>
+<ol>
+<li>xml 设置控件背景  <code>android:background=&quot;@color/white_an&quot;</code></li>
+<li>设置加载图片的占位图 <code>ImageLoadParams.defaultholder = R.color.white_a</code></li>
+</ol>
+<p>这两个色值都是定义在 values 中 <code>#ffffff</code>，都是很常规的操作。</p>
+<p>查看系统方法 android.graphics.drawable.ColorDrawable#setAlpha</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void setAlpha(int alpha) &#123;</span><br><span class="line">    alpha += alpha &gt;&gt; 7;   // make it 0..256</span><br><span class="line">    final int baseAlpha = mColorState.mBaseColor &gt;&gt;&gt; 24;</span><br><span class="line">    final int useAlpha = baseAlpha * alpha &gt;&gt; 8;</span><br><span class="line">    final int useColor = (mColorState.mBaseColor &lt;&lt; 8 &gt;&gt;&gt; 8) | (useAlpha &lt;&lt; 24);</span><br><span class="line">    if (mColorState.mUseColor != useColor) &#123;</span><br><span class="line">        mColorState.mUseColor = useColor;</span><br><span class="line">        invalidateSelf();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码很简单，计算 alpha，颜色不一致时把最终计算得到的 useColor 赋值给 mColorState，并重绘自身。这个 mColorState 是什么呢？查看源码发现它是 ColorState 的实例，而 ColorState 又是继承自抽象类 ConstantState。</p>
+<p>ConstatntState 的源码描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">This abstract class is used by &#123;@link Drawable&#125;s to store shared constant state and data between Drawables. </span><br><span class="line">&#123;@link BitmapDrawable&#125;s created from the same resource will for instance share a unique bitmap stored in their ConstantState.</span><br></pre></td></tr></table></figure>
+<p>也就是说，每个 Drawable 都共享一个唯一的 ConstantState 对象，这是为了共享 Drawable 的状态和数据，从同一个 res 中创建的 Drawable，它们会共享同一个 ConstantState 对象。</p>
+<h2 id="具体分析"><a href="#具体分析" class="headerlink" title="具体分析"></a>具体分析</h2><h3 id="从-xml-加载-backgroud-的过程"><a href="#从-xml-加载-backgroud-的过程" class="headerlink" title="从 xml 加载 backgroud 的过程"></a>从 xml 加载 backgroud 的过程</h3><p>在 View 中解析 attr</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public View(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) &#123;</span><br><span class="line">        this(context);</span><br><span class="line">        ...</span><br><span class="line">        for (int i = 0; i &lt; N; i++) &#123;</span><br><span class="line">            int attr = a.getIndex(i);</span><br><span class="line">            switch (attr) &#123;</span><br><span class="line">                case com.android.internal.R.styleable.View_background:</span><br><span class="line">                    background = a.getDrawable(attr);</span><br><span class="line">                    break;</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>继续跟到 android.content.res.TypedArray</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public Drawable getDrawable(@StyleableRes int index) &#123;</span><br><span class="line">    return getDrawableForDensity(index, 0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public Drawable getDrawableForDensity(@StyleableRes int index, int density) &#123;</span><br><span class="line">    ...</span><br><span class="line">    if (getValueAt(index * STYLE_NUM_ENTRIES, value)) &#123;</span><br><span class="line">        ...</span><br><span class="line">        return mResources.loadDrawable(value, value.resourceId, density, mTheme);</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终会走到 android.content.res.ResourcesImpl#loadDrawable，重点看一下这个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">Drawable loadDrawable(@NonNull Resources wrapper, @NonNull TypedValue value, int id,</span><br><span class="line">            int density, @Nullable Resources.Theme theme)</span><br><span class="line">            throws NotFoundException &#123;</span><br><span class="line">        // If the drawable&apos;s XML lives in our current density qualifier,</span><br><span class="line">        // it&apos;s okay to use a scaled version from the cache. Otherwise, we</span><br><span class="line">        // need to actually load the drawable from XML.</span><br><span class="line">        final boolean useCache = density == 0 || value.density == mMetrics.densityDpi;</span><br><span class="line"></span><br><span class="line">        // Pretend the requested density is actually the display density. If</span><br><span class="line">        // the drawable returned is not the requested density, then force it</span><br><span class="line">        // to be scaled later by dividing its density by the ratio of</span><br><span class="line">        // requested density to actual device density. Drawables that have</span><br><span class="line">        // undefined density or no density don&apos;t need to be handled here.</span><br><span class="line">        if (density &gt; 0 &amp;&amp; value.density &gt; 0 &amp;&amp; value.density != TypedValue.DENSITY_NONE) &#123;</span><br><span class="line">            if (value.density == density) &#123;</span><br><span class="line">                value.density = mMetrics.densityDpi;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                value.density = (value.density * mMetrics.densityDpi) / density;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            if (TRACE_FOR_PRELOAD) &#123;</span><br><span class="line">                // Log only framework resources</span><br><span class="line">                if ((id &gt;&gt;&gt; 24) == 0x1) &#123;</span><br><span class="line">                    final String name = getResourceName(id);</span><br><span class="line">                    if (name != null) &#123;</span><br><span class="line">                        Log.d(&quot;PreloadDrawable&quot;, name);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            final boolean isColorDrawable;</span><br><span class="line">            final DrawableCache caches;</span><br><span class="line">            final long key;</span><br><span class="line">            if (value.type &gt;= TypedValue.TYPE_FIRST_COLOR_INT</span><br><span class="line">                    &amp;&amp; value.type &lt;= TypedValue.TYPE_LAST_COLOR_INT) &#123;</span><br><span class="line">                isColorDrawable = true;</span><br><span class="line">                caches = mColorDrawableCache;</span><br><span class="line">                key = value.data;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                isColorDrawable = false;</span><br><span class="line">                caches = mDrawableCache;</span><br><span class="line">                key = (((long) value.assetCookie) &lt;&lt; 32) | value.data;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // First, check whether we have a cached version of this drawable</span><br><span class="line">            // that was inflated against the specified theme. Skip the cache if</span><br><span class="line">            // we&apos;re currently preloading or we&apos;re not using the cache.</span><br><span class="line">            if (!mPreloading &amp;&amp; useCache) &#123;</span><br><span class="line">                final Drawable cachedDrawable = caches.getInstance(key, wrapper, theme);</span><br><span class="line">                if (cachedDrawable != null) &#123;</span><br><span class="line">                    cachedDrawable.setChangingConfigurations(value.changingConfigurations);</span><br><span class="line">                    return cachedDrawable;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // Next, check preloaded drawables. Preloaded drawables may contain</span><br><span class="line">            // unresolved theme attributes.</span><br><span class="line">            final Drawable.ConstantState cs;</span><br><span class="line">            if (isColorDrawable) &#123;</span><br><span class="line">                cs = sPreloadedColorDrawables.get(key);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                cs = sPreloadedDrawables[mConfiguration.getLayoutDirection()].get(key);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Drawable dr;</span><br><span class="line">            boolean needsNewDrawableAfterCache = false;</span><br><span class="line">            if (cs != null) &#123;</span><br><span class="line">                if (TRACE_FOR_DETAILED_PRELOAD) &#123;</span><br><span class="line">                    // Log only framework resources</span><br><span class="line">                    if (((id &gt;&gt;&gt; 24) == 0x1) &amp;&amp; (android.os.Process.myUid() != 0)) &#123;</span><br><span class="line">                        final String name = getResourceName(id);</span><br><span class="line">                        if (name != null) &#123;</span><br><span class="line">                            Log.d(TAG_PRELOAD, &quot;Hit preloaded FW drawable #&quot;</span><br><span class="line">                                    + Integer.toHexString(id) + &quot; &quot; + name);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                dr = cs.newDrawable(wrapper);</span><br><span class="line">            &#125; else if (isColorDrawable) &#123;</span><br><span class="line">                dr = new ColorDrawable(value.data);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                dr = loadDrawableForCookie(wrapper, value, id, density);</span><br><span class="line">            &#125;</span><br><span class="line">            // DrawableContainer&apos; constant state has drawables instances. In order to leave the</span><br><span class="line">            // constant state intact in the cache, we need to create a new DrawableContainer after</span><br><span class="line">            // added to cache.</span><br><span class="line">            if (dr instanceof DrawableContainer)  &#123;</span><br><span class="line">                needsNewDrawableAfterCache = true;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // Determine if the drawable has unresolved theme attributes. If it</span><br><span class="line">            // does, we&apos;ll need to apply a theme and store it in a theme-specific</span><br><span class="line">            // cache.</span><br><span class="line">            final boolean canApplyTheme = dr != null &amp;&amp; dr.canApplyTheme();</span><br><span class="line">            if (canApplyTheme &amp;&amp; theme != null) &#123;</span><br><span class="line">                dr = dr.mutate();</span><br><span class="line">                dr.applyTheme(theme);</span><br><span class="line">                dr.clearMutated();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // If we were able to obtain a drawable, store it in the appropriate</span><br><span class="line">            // cache: preload, not themed, null theme, or theme-specific. Don&apos;t</span><br><span class="line">            // pollute the cache with drawables loaded from a foreign density.</span><br><span class="line">            if (dr != null) &#123;</span><br><span class="line">                dr.setChangingConfigurations(value.changingConfigurations);</span><br><span class="line">                if (useCache) &#123;</span><br><span class="line">                    cacheDrawable(value, isColorDrawable, caches, theme, canApplyTheme, key, dr);</span><br><span class="line">                    if (needsNewDrawableAfterCache) &#123;</span><br><span class="line">                        Drawable.ConstantState state = dr.getConstantState();</span><br><span class="line">                        if (state != null) &#123;</span><br><span class="line">                            dr = state.newDrawable(wrapper);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return dr;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            String name;</span><br><span class="line">            try &#123;</span><br><span class="line">                name = getResourceName(id);</span><br><span class="line">            &#125; catch (NotFoundException e2) &#123;</span><br><span class="line">                name = &quot;(missing name)&quot;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // The target drawable might fail to load for any number of</span><br><span class="line">            // reasons, but we always want to include the resource name.</span><br><span class="line">            // Since the client already expects this method to throw a</span><br><span class="line">            // NotFoundException, just throw one of those.</span><br><span class="line">            final NotFoundException nfe = new NotFoundException(&quot;Drawable &quot; + name</span><br><span class="line">                    + &quot; with resource ID #0x&quot; + Integer.toHexString(id), e);</span><br><span class="line">            nfe.setStackTrace(new StackTraceElement[0]);</span><br><span class="line">            throw nfe;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>主要过程可以分为</p>
+<p>1、判断 Drawable 类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if (value.type &gt;= TypedValue.TYPE_FIRST_COLOR_INT &amp;&amp; value.type &lt;= TypedValue.TYPE_LAST_COLOR_INT) &#123;</span><br><span class="line">    isColorDrawable = true;</span><br><span class="line">    caches = mColorDrawableCache;</span><br><span class="line">    key = value.data;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    isColorDrawable = false;</span><br><span class="line">    caches = mDrawableCache;</span><br><span class="line">    key = (((long) value.assetCookie) &lt;&lt; 32) | value.data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>TypedValue.TYPE_FIRST_COLOR_INT &amp;&amp; value.type &lt;= TypedValue.TYPE_LAST_COLOR_INT</code> 如果资源是以#开头并且是色值，则是 ColorDrawable ，所以本例中 isColorDrawable 为 true。如果是 ColorDrawable，缓存 key 实际就是代表色值的 <code>#ffffff</code> 这一串内容。</p>
+<p>2、尝试从缓存中取图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (!mPreloading &amp;&amp; useCache) &#123;</span><br><span class="line">    final Drawable cachedDrawable = caches.getInstance(key, wrapper, theme);</span><br><span class="line">    if (cachedDrawable != null) &#123;</span><br><span class="line">        cachedDrawable.setChangingConfigurations(value.changingConfigurations);</span><br><span class="line">        return cachedDrawable;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>预加载是在 zygote 进程启动的时候被执行，此时预加载已经完成，所以 mPreloading 必定是 false。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final boolean useCache = density == 0 || value.density == mMetrics.densityDpi;</span><br></pre></td></tr></table></figure>
+<p>在取资源的第一步，会传入 density=0，所以此时 useCache 为 true。</p>
+<p>接着看下取缓存的方法 <code>caches.getInstance(key, wrapper, theme)</code><br>android.content.res.DrawableCache#getInstance</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public Drawable getInstance(long key, Resources resources, Resources.Theme theme) &#123;</span><br><span class="line">        final Drawable.ConstantState entry = get(key, theme);</span><br><span class="line">        if (entry != null) &#123;</span><br><span class="line">            return entry.newDrawable(resources, theme);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到系统是从缓存中找到 Drawable.ConstantState，调用 Drawable.ConstantState#newDrawable() 返回一个新的 Drawable。所以在本例中，使用 ColorState#newDrawable() 创建新的 ColorDrawable，在没有特殊情况下，此时 ColorDrawable 的状态数据是全局独一份的，也就是 ColorState 是唯一的。</p>
+<p>3、如果缓存中没有，则创建一个新的资源，然后缓存下来</p>
+<p>首先检查预加载的资源文件中，是否存在要查找的 Drawable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final Drawable.ConstantState cs;</span><br><span class="line">if (isColorDrawable) &#123;</span><br><span class="line">    cs = sPreloadedColorDrawables.get(key);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    cs = sPreloadedDrawables[mConfiguration.getLayoutDirection()].get(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到此时找到的也是 Drawable.ConstantState，接着根据不同情况调用不同的方法生成新的 Drawable。</p>
+<p>从 xml 加载 backgroud 的过程到此结束。使用 android.view.View#setBackgroundResource() 代码中设置background 的过程也是类似的。</p>
+<h3 id="如何做到牵一发而动全身？"><a href="#如何做到牵一发而动全身？" class="headerlink" title="如何做到牵一发而动全身？"></a>如何做到牵一发而动全身？</h3><p>回到前面讲的 android.graphics.drawable.ColorDrawable#setAlpha </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void setAlpha(int alpha) &#123;</span><br><span class="line">		...</span><br><span class="line">    if (mColorState.mUseColor != useColor) &#123;</span><br><span class="line">        mColorState.mUseColor = useColor;</span><br><span class="line">        invalidateSelf();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>计算得到的颜色值不一致时会重绘自身。调用的是父类方法 android.graphics.drawable.Drawable#invalidateSelf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void invalidateSelf() &#123;</span><br><span class="line">    final Callback callback = getCallback();</span><br><span class="line">    if (callback != null) &#123;</span><br><span class="line">        callback.invalidateDrawable(this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到最终是通过 android.graphics.drawable.Drawable.Callback 的实现类调用 invalidateDrawable 来重绘。一般 background 都是和 View 关联的，而 View 又实现了该接口，所以最终是通知关联的 View 重新绘制自身，做到牵一发而动全身。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>类似的，android.graphics.drawable.ColorDrawable#setColor 也会影响色值，所以对于 ColorDrawable，它会关联同一个 ColorState 对象，color 的颜色值是保存在 ColorState 对象中。如果修改 ColorDrawable 的颜色值，会修改到 ColorState 的值，进而会导致和 ColorState 关联的所有的 ColorDrawable 的颜色都改变。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>那么怎么解决 ColorState 共享的问题呢？</p>
+<h3 id="使用-android-graphics-drawable-ColorDrawable-mutate"><a href="#使用-android-graphics-drawable-ColorDrawable-mutate" class="headerlink" title="使用 android.graphics.drawable.ColorDrawable#mutate"></a>使用 android.graphics.drawable.ColorDrawable#mutate</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public Drawable mutate() &#123;</span><br><span class="line">	// 如果没有改变过，并且是同一个Drawable</span><br><span class="line">    if (!mMutated &amp;&amp; super.mutate() == this) &#123;</span><br><span class="line">        // 直接 new ColorState，所以不会和其他 ColorDrawable 共享状态，因此不会相互影响</span><br><span class="line">        mColorState = new ColorState(mColorState);</span><br><span class="line">        // 标记为已改变</span><br><span class="line">        mMutated = true;</span><br><span class="line">    &#125;</span><br><span class="line">    // 返回已经改变后的 ColorDrawable</span><br><span class="line">    return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那如果还想共享 ColorDrawable 状态，怎么办？</p>
+<p>系统也提供了方法 android.graphics.drawable.ColorDrawable#clearMutated</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @hide</span><br><span class="line"> */</span><br><span class="line">public void clearMutated() &#123;</span><br><span class="line">    super.clearMutated();</span><br><span class="line">    mMutated = false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是该方法实际已经使用注解 @hide，是无法调用的，所以一旦调用 mutate 就不可撤销。</p>
+<h3 id="使用构造方法生成新的-ColorDrawable"><a href="#使用构造方法生成新的-ColorDrawable" class="headerlink" title="使用构造方法生成新的 ColorDrawable"></a>使用构造方法生成新的 ColorDrawable</h3><p>在构造方法中是直接 new ColorState，所以不会和其他 ColorDrawable 共享状态，因此不会相互影响。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public ColorDrawable() &#123;</span><br><span class="line">    mColorState = new ColorState();</span><br><span class="line">&#125;</span><br><span class="line">或者</span><br><span class="line">public ColorDrawable(@ColorInt int color) &#123;</span><br><span class="line">    mColorState = new ColorState();</span><br><span class="line"></span><br><span class="line">    setColor(color);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="复现问题"><a href="#复现问题" class="headerlink" title="复现问题"></a>复现问题</h2><p>通过前面的分析，可以知道肯定有地方调用了 android.graphics.drawable.ColorDrawable#setAlpha，所以问题又变成了找出 android.graphics.drawable.Drawable#setAlpha 的调用栈。</p>
+<p>经过小伙伴的提醒可以使用 Android studio 自带工具 CPU profiler dump trace。</p>
+<p>这里采用 <code>Sample Java Methods</code> 在列表滚动的时候记录一段时间的开始和结束，因为项目中使用 Fresco 图片加载框架，所以调用栈可以看到很多 fresco 相关类。</p>
+<p>从调用栈中可以看到，都是调用系统及第三方的方法，并没有业务主动调用的地方。倒数第四行，在调用 com.facebook.drawee.drawable.ForwardingDrawable#setAlpha 后马上又调用系统 android.graphics.drawable.ColorDrawable#setAlpha，这有可能就是出问题的关键点。</p>
+<p><img src="http://res.bincn.xyz/image-20200421110826921.webp" alt="image-20200421110826921.png"></p>
+<p>查看源码 com.facebook.drawee.drawable.ForwardingDrawable#setAlpha</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void setAlpha(int alpha) &#123;</span><br><span class="line">  mDrawableProperties.setAlpha(alpha);</span><br><span class="line">  if (mCurrentDelegate != null) &#123;</span><br><span class="line">    mCurrentDelegate.setAlpha(alpha);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mDrawableProperties 是 DrawableProperties 的实例，用来统一设置 drawable 属性。</p>
+<p>继续看 com.facebook.drawee.drawable.DrawableProperties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">private static final int UNSET = -1;</span><br><span class="line">// mAlpha 默认 -1</span><br><span class="line">private int mAlpha = UNSET;</span><br><span class="line"></span><br><span class="line">// 设置 alpha，这个 alpha 会一直存在</span><br><span class="line">public void setAlpha(int alpha) &#123;</span><br><span class="line">  mAlpha = alpha;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 设置 drawable 属性，包括 alpha</span><br><span class="line">public void applyTo(Drawable drawable) &#123;</span><br><span class="line">  if (drawable == null) &#123;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  if (mAlpha != UNSET) &#123;</span><br><span class="line">    drawable.setAlpha(mAlpha);</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到 mAlpha 默认为 -1，只有不等于 -1 才设置到 Drawable。</p>
+<p>假如出异常最终会调到这里，为了进一步验证，在这里打个条件断点，条件是：</p>
+<p>1、drawable 类型是 ColorDrawable</p>
+<p>2、drawable#ConstantState 的 hashCode 等于全局标题栏背景 drawable#ConstantState 的 hashCode</p>
+<p>3、 alpha 小于 255</p>
+<p>前面分析过，从同一个资源 res 创建的 Drawable#ConstantState 是唯一的，如果改动其中一个 drawable 的 alpha，其它 ConstantState 关联的所有的 Drawable 都会改变。如果同时满足上面条件，那么就可以知道出问题的源头了。</p>
+<p><img src="http://res.bincn.xyz/image-20200421143328799.webp" alt="image-20200421143328799.png"></p>
+<p><code>144002320</code> 就是全局标题栏背景 drawable#ConstantState 的 hashCode。</p>
+<p>快速反复来回滑动列表，确实会进到设置好的条件断点，验证过程中可以偶现该异常，发现页面中标题栏背景变了，查看 App 其他页面也有同样的问题。堆栈如下：</p>
+<p><img src="http://res.bincn.xyz/image-2020042114332980.webp" alt="image.png"></p>
+<p>注意堆栈中从 fillView 到 applyTo 的调用过程，其中有一行 setImageHolder，调用的是项目底层封装的方法 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">private void setImageHolder(IFrescoImageView draweeView, FrescoPainterPen pen) &#123;</span><br><span class="line">        int defaultResID = pen.getDefaultHolder();</span><br><span class="line">        ScaleType defaultScaleType = pen.getDefaultHolderScaleType();</span><br><span class="line">        ...</span><br><span class="line">        if (defaultResID &gt; 0) &#123;</span><br><span class="line">            if (defaultScaleType == null) &#123;</span><br><span class="line">                this.getHierarchy(draweeView).setPlaceholderImage(defaultResID);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                this.getHierarchy(draweeView).setPlaceholderImage(defaultResID, defaultScaleType);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这两个分支的区别是有无设置占位图的缩放类型，最终处理都是一样的，我们看其中一个  com.facebook.drawee.generic.GenericDraweeHierarchy#setPlaceholderImage(int)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void setPlaceholderImage(int resourceId) &#123;</span><br><span class="line">  Drawable drawable = null;</span><br><span class="line">  // 第一步</span><br><span class="line">  if(mFrescoPainterDraweeInterceptor != null)&#123;</span><br><span class="line">    drawable = mFrescoPainterDraweeInterceptor.onSetPlaceholderImage(resourceId);</span><br><span class="line">  &#125;</span><br><span class="line">  // 第二步</span><br><span class="line">  if(drawable == null)&#123;</span><br><span class="line">    drawable = mResources.getDrawable(resourceId);</span><br><span class="line">  &#125;</span><br><span class="line">  setPlaceholderImage(drawable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>mFrescoPainterDraweeInterceptor 是项目中设置的拦截器，主要作用是从皮肤包加载图片，App 默认没开换肤，所以第一步 drawable 为 null。假设开启换肤，底层最终是使用 new ColorDrawable(newId) 的方式，所以不会出现这个异常状况。</p>
+<p>第二步出现了熟悉的代码 <code>mResources.getDrawable(resourceId)</code>，前面有提过使用色值 <code>#ffffff</code> 的地方，占位图是其中一个，这个 resourceId 就是我们外部设置的占位图，所以这里肯定是先从系统缓存里取图，所以使用的 ConstantState 肯定关联了其他的 ColorDrawable。这就有可能出现异常状况。</p>
+<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>fresco 视图是一个多层级的结构，列表滑动时，移出屏幕的视图释放资源，移入屏幕的视图加载资源，视图层有个变换的过程，简单表示就是：</p>
+<p>ActaulImage —&gt; PlaceHolderImage —&gt; ActualImage</p>
+<p>中间的变换是通过 GenericDraweeHierarchy 控制 FadeDrawable 做淡入淡出渐变。在列表快速来回滑动时，图层会多次变换，设置到 DrawableProperties 的 alpha 可能是 0~1.0 的随机值，在某些极端条件下，如果此时刚好又触发了 PainterWorksapce#setImageHolder 那就会把之前保存的 alpha 设置到占位图上，进而会导致这个异常问题。</p>
+<p>所以如果 App 全局有背景刚好和占位图的背景是相同色值，那么也有可能会出现这个异常。</p>
+<h2 id="最终解决方案"><a href="#最终解决方案" class="headerlink" title="最终解决方案"></a>最终解决方案</h2><p>通过前面知道最佳解决办法是在使用 Drawable 之前调用 android.graphics.drawable.ColorDrawable#mutate。</p>
+<p>还有一些其它的方法</p>
+<p>1、临时解决办法是，在该页面的几个关键点，如 onPause、onResume、侧滑返回等，检测使用到该色值的控件，如果 alpha 小于 255，那么再手动设置回 255，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private void fixWhiteAnAlpha() &#123;</span><br><span class="line">    if (titleBarCommon != null &amp;&amp; titleBarCommon.getBackground() != null &amp;&amp; titleBarCommon.getBackground().getAlpha() &lt; 255) &#123;</span><br><span class="line">        LogUtils.d(&quot;===&gt;VideoThemeDetail&quot;, &quot;出错了===drawable alpha: &quot; + titleBarCommon.getBackground().getAlpha());</span><br><span class="line">        titleBarCommon.getBackground().setAlpha(255);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、采用自定义 xml drawable 的方式，这种方式最终会解析成 GradientDrawable，而该类的 setAlpha 方法并不会改动到 ConstantState 的状态，所以可以避免 Drawable 状态共享的问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 设置占位图</span><br><span class="line">ImageLoadParams.defaultholder = R.drawable.bg_white</span><br><span class="line"> </span><br><span class="line"># bg_white</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</span><br><span class="line">    &lt;solid android:color=&quot;@color/white_an&quot;/&gt;</span><br><span class="line">&lt;/shape&gt;</span><br></pre></td></tr></table></figure>
+<p>android.graphics.drawable.GradientDrawable#setAlpha</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public void setAlpha(int alpha) &#123;</span><br><span class="line">    if (alpha != mAlpha) &#123;</span><br><span class="line">        mAlpha = alpha;</span><br><span class="line">        invalidateSelf();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="一些其他思考"><a href="#一些其他思考" class="headerlink" title="一些其他思考"></a>一些其他思考</h2><p>fresco 设置占位图的方式，参考链接 <a href="https://frescolib.org/docs/placeholder-failure-retry.html" target="_blank" rel="noopener">https://frescolib.org/docs/placeholder-failure-retry.html</a></p>
+<p>xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;com.facebook.drawee.view.SimpleDraweeView</span><br><span class="line">  android:id=&quot;@+id/my_image_view&quot;</span><br><span class="line">  android:layout_width=&quot;20dp&quot;</span><br><span class="line">  android:layout_height=&quot;20dp&quot;</span><br><span class="line">  fresco:placeholderImage=&quot;@drawable/my_placeholder_drawable&quot;</span><br><span class="line">  /&gt;</span><br></pre></td></tr></table></figure>
+<p>code</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mSimpleDraweeView.getHierarchy().setPlaceholderImage(placeholderImage);</span><br></pre></td></tr></table></figure>
+<p>如果是从 xml 设置占位图，在一开始初始化的时候，fresco 就已经帮我们 mutate 了一份独立的 drawable，所以肯定不会有问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) &#123;</span><br><span class="line">    ...省略</span><br><span class="line">    // top-level drawable</span><br><span class="line">    mTopLevelDrawable = new RootDrawable(maybeRoundedDrawable);</span><br><span class="line">    // 这里会遍历图层 mutate</span><br><span class="line">    mTopLevelDrawable.mutate();</span><br><span class="line">    resetFade();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>而使用 code 的方式，在初始化时并没有看到有调用 mutate 方法，那么传入  ColorDrawable，就很有可能会出现上面类似场景的异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void setPlaceholderImage(@Nullable Drawable drawable) &#123;</span><br><span class="line">  setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void setChildDrawableAtIndex(int index, @Nullable Drawable drawable) &#123;</span><br><span class="line">  if (drawable == null) &#123;</span><br><span class="line">    mFadeDrawable.setDrawable(index, null);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);</span><br><span class="line">  getParentDrawableAtIndex(index).setDrawable(drawable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="其他的排查方法"><a href="#其他的排查方法" class="headerlink" title="其他的排查方法"></a>其他的排查方法</h2><p>后来发现也可以使用 AspectJ 插桩的方式，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Around(&quot;call(* android.graphics.drawable.Drawable.setAlpha(..))&quot;)</span><br><span class="line">public void hookSetAlpha(ProceedingJoinPoint joinPoint) throws Throwable &#123;</span><br><span class="line">    joinPoint.proceed();</span><br><span class="line">    LogUtils.i(&quot;===&gt;hookSetAlpha&quot;, &quot;cur:&quot;+joinPoint.getSignature().getDeclaringType().getSimpleName()+&quot;#:&quot;+joinPoint.getSignature().getName());</span><br><span class="line">    StackTraceElement[] stackTraceElements = (new Throwable()).getStackTrace();</span><br><span class="line">    for (int i = 0; i &lt; stackTraceElements.length; i++) &#123;</span><br><span class="line">        StackTraceElement stackTraceElement = stackTraceElements[i];</span><br><span class="line">        LogUtils.i(&quot;===&gt;hookSetAlpha&quot;, &quot;===&quot; + stackTraceElement.getClassName()</span><br><span class="line">                + &quot;, &quot; + stackTraceElement.getMethodName()</span><br><span class="line">                + &quot;, &quot; + stackTraceElement.getLineNumber());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以得到 android.graphics.drawable.Drawable.setAlpha 的调用栈。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    bincn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.bincn.xyz/android-Global-background-alpha-change-caused-by-ColorDrawable.html" title="ColorDrawable 引起的全局背景 alpha 变化问题">https://www.bincn.xyz/android-Global-background-alpha-change-caused-by-ColorDrawable.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/git-commit-keyword-optimization.html" rel="next" title="给 Git commit 加关键字">
+                <i class="fa fa-chevron-left"></i> 给 Git commit 加关键字
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="bincn" />
+            
+              <p class="site-author-name" itemprop="name">bincn</p>
+              <p class="site-description motion-element" itemprop="description">Coding, Simple and Native</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#初步分析"><span class="nav-number">1.</span> <span class="nav-text">初步分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体分析"><span class="nav-number">2.</span> <span class="nav-text">具体分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从-xml-加载-backgroud-的过程"><span class="nav-number">2.1.</span> <span class="nav-text">从 xml 加载 backgroud 的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何做到牵一发而动全身？"><span class="nav-number">2.2.</span> <span class="nav-text">如何做到牵一发而动全身？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">4.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-android-graphics-drawable-ColorDrawable-mutate"><span class="nav-number">4.1.</span> <span class="nav-text">使用 android.graphics.drawable.ColorDrawable#mutate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用构造方法生成新的-ColorDrawable"><span class="nav-number">4.2.</span> <span class="nav-text">使用构造方法生成新的 ColorDrawable</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复现问题"><span class="nav-number">5.</span> <span class="nav-text">复现问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题原因"><span class="nav-number">6.</span> <span class="nav-text">问题原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终解决方案"><span class="nav-number">7.</span> <span class="nav-text">最终解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些其他思考"><span class="nav-number">8.</span> <span class="nav-text">一些其他思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的排查方法"><span class="nav-number">9.</span> <span class="nav-text">其他的排查方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bincn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
